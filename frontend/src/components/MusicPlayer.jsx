@@ -24,7 +24,7 @@ export default function MusicPlayer() {
             className="fixed bottom-7 right-8 z-40 hidden sm:flex flex-col items-stretch gap-2"
             style={{ width: "330px" }}
         >
-            <audio ref={audioRef} src="/audio/arcane-sun.mp3" />
+            <audio ref={audioRef} src="/Boxhead (Immortal) OST.mp3" />
 
             <div
                 className="flex items-center gap-3 p-2 pr-3 backdrop-blur-md border border-[var(--line-strong)]"
