@@ -26,7 +26,7 @@ export default function BioCoreSphere() {
         scene.fog = new THREE.FogExp2(0x05070b, 0.08);
 
         const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-        camera.position.set(0, 0, 5.2);
+        camera.position.set(0, 0, 6.0);
 
         const renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -44,13 +44,13 @@ export default function BioCoreSphere() {
             uTime: { value: 0 },
             uMouse: { value: new THREE.Vector2(0, 0) },
             uProximity: { value: 0 },
-            uColorA: { value: new THREE.Color(0x1a2a6c) }, // deep blue
-            uColorB: { value: new THREE.Color(0x6a00ff) }, // secondary glow purple
-            uColorBase: { value: new THREE.Color(0x0a0e18) },
+            uColorA: { value: new THREE.Color(0x2a1a52) }, // deep purple-blue
+            uColorB: { value: new THREE.Color(0x8a3eff) }, // electric purple
+            uColorBase: { value: new THREE.Color(0x141520) },
         };
 
         // --- Bio-core sphere (cracked metal + glowing veins) ---
-        const sphereGeo = new THREE.IcosahedronGeometry(1.35, 64);
+        const sphereGeo = new THREE.IcosahedronGeometry(1.05, 64);
         const sphereMat = new THREE.ShaderMaterial({
             uniforms,
             transparent: true,
@@ -161,14 +161,14 @@ export default function BioCoreSphere() {
                     vec3 V = normalize(cameraPosition - vPos);
                     float fres = pow(1.0 - max(dot(N, V), 0.0), 2.4);
 
-                    // Metal surface base: layered, more textured
+                    // Metal surface base: layered, more textured (cooler gray)
                     float surf1 = fbm(vPos * 4.2 + vec3(0.0, uTime*0.05, 0.0));
                     float surf2 = fbm(vPos * 8.5 + vec3(uTime*0.03, 0.0, 0.0));
-                    vec3 metal = mix(vec3(0.010, 0.014, 0.022), vec3(0.038, 0.048, 0.072), smoothstep(-0.3, 0.8, surf1));
-                    metal += vec3(0.018, 0.024, 0.040) * smoothstep(0.2, 0.7, surf2);
+                    vec3 metal = mix(vec3(0.014, 0.014, 0.020), vec3(0.052, 0.050, 0.070), smoothstep(-0.3, 0.8, surf1));
+                    metal += vec3(0.024, 0.022, 0.038) * smoothstep(0.2, 0.7, surf2);
                     // Dark cracked patches
                     float darkPatch = smoothstep(0.15, 0.55, fbm(vPos * 5.5));
-                    metal *= (1.0 - darkPatch * 0.45);
+                    metal *= (1.0 - darkPatch * 0.5);
 
                     // FLUID DOMAIN WARP: offset sample point by another fbm for marbled flow
                     vec3 warp = vec3(
@@ -191,33 +191,34 @@ export default function BioCoreSphere() {
                     float n3 = fbm(wPos * 9.0);
                     float hairline = (1.0 - smoothstep(0.0, 0.009, abs(n3))) * 0.35;
 
-                    // Glow color: blend blue -> purple based on low-freq noise
+                    // Glow color: bias toward purple (less blue dominant)
                     float colMix = fbm(vPos * 1.0 + vec3(uTime*0.04));
-                    vec3 glowCol = mix(uColorA, uColorB, smoothstep(-0.3, 0.55, colMix));
-                    // Boost overall vein luminance
-                    glowCol *= 1.6;
-                    // Mouse proximity shifts color toward purple
-                    glowCol = mix(glowCol, uColorB * 1.8, uProximity * 0.4);
+                    vec3 glowCol = mix(uColorA, uColorB, smoothstep(-0.5, 0.4, colMix));
+                    // Boost overall vein luminance, stronger toward purple
+                    glowCol *= 1.5;
+                    // Mouse proximity shifts color slightly purple-magenta
+                    glowCol = mix(glowCol, uColorB * 1.6, uProximity * 0.35);
 
-                    // Combine — slightly toned down for less dominance
+                    // Combine — toned down further; less dominant
                     vec3 col = metal;
-                    col += glowCol * veins * (1.7 + uProximity * 1.2);
-                    col += glowCol * veinsB * (1.05 + uProximity * 0.5);
-                    col += glowCol * microVeins * 0.7;
-                    col += glowCol * hairline * 0.4;
+                    col += glowCol * veins * (1.1 + uProximity * 0.9);
+                    col += glowCol * veinsB * (0.7 + uProximity * 0.4);
+                    col += glowCol * microVeins * 0.5;
+                    col += glowCol * hairline * 0.3;
                     // Rim light
-                    col += fres * mix(uColorA, uColorB, 0.6) * (0.35 + uProximity * 0.3);
+                    col += fres * mix(uColorA, uColorB, 0.6) * (0.25 + uProximity * 0.25);
                     // Pulse along primary veins
                     float pulse = 0.5 + 0.5 * sin(uTime * 1.1);
-                    col += glowCol * veins * 0.35 * pulse;
+                    col += glowCol * veins * 0.22 * pulse;
                     // Displacement-based highlight (cursor ripples glow more)
-                    col += glowCol * max(vDisp, 0.0) * 0.9;
+                    col += glowCol * max(vDisp, 0.0) * 0.6;
 
                     gl_FragColor = vec4(col, 1.0);
                 }
             `,
         });
         const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+        sphere.position.x = 1.1;
         scene.add(sphere);
 
         // --- Inner core: small glowing orb inside for depth ---
@@ -254,6 +255,7 @@ export default function BioCoreSphere() {
             `,
         });
         const core = new THREE.Mesh(coreGeo, coreMat);
+        core.position.x = 1.1;
         scene.add(core);
 
         // --- Tendrils: live, writhing, micro-organism-like strands ---
@@ -359,6 +361,7 @@ export default function BioCoreSphere() {
             tendrilState.push(state);
         }
         scene.add(tendrilsGroup);
+        tendrilsGroup.position.x = 1.1;
 
         // --- Halo: faint pulsing energy ring around the sphere ---
         const haloGeo = new THREE.RingGeometry(1.6, 2.05, 128, 1);
@@ -408,6 +411,7 @@ export default function BioCoreSphere() {
             `,
         });
         const halo = new THREE.Mesh(haloGeo, haloMat);
+        halo.position.x = 1.1;
         halo.rotation.x = Math.PI / 2; // face camera-ish, will billboard each frame
         scene.add(halo);
 
@@ -634,6 +638,7 @@ export default function BioCoreSphere() {
             depthWrite: false,
         });
         const particles = new THREE.Points(pGeo, pMat);
+        particles.position.x = 1.1;
         scene.add(particles);
 
         // --- Lighting (ambient only - we use shader-based lighting) ---
@@ -670,7 +675,7 @@ export default function BioCoreSphere() {
         // --- Render loop ---
         const clock = new THREE.Clock();
         let frameId;
-        const baseCamZ = 5.2;
+        const baseCamZ = 6.0;
         const animate = () => {
             const dt = clock.getDelta();
             const t = clock.getElapsedTime();
@@ -738,9 +743,9 @@ export default function BioCoreSphere() {
             const targetZ = baseCamZ - m.proximity * 0.6;
             camera.position.z += (targetZ - camera.position.z) * 0.025;
             // Parallax depth on camera
-            camera.position.x += (m.x * 0.45 - camera.position.x) * 0.035;
+            camera.position.x += (m.x * 0.45 + 1.1 - camera.position.x) * 0.035;
             camera.position.y += (m.y * 0.30 - camera.position.y) * 0.035;
-            camera.lookAt(0, 0, 0);
+            camera.lookAt(1.1, 0, 0);
 
             renderer.render(scene, camera);
             frameId = requestAnimationFrame(animate);
@@ -797,3 +802,4 @@ export default function BioCoreSphere() {
         </div>
     );
 }
+

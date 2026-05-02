@@ -1,11 +1,11 @@
 import BioCoreSphere from "./BioCoreSphere";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const SERVICES = [
-    "Guitar Recording",
-    "Music Production",
-    "Composing",
-    "Mixing & Mastering",
+    "GUITAR RECORDING",
+    "PRODUCTION",
+    "COMPOSING",
+    "MIXING & MASTERING",
 ];
 
 export default function Hero() {
@@ -13,99 +13,111 @@ export default function Hero() {
         <section
             id="work"
             data-testid="hero-section"
-            className="relative w-full h-screen min-h-[680px] overflow-hidden"
-            style={{ background: "#05070b" }}
+            className="relative w-full h-screen min-h-[760px] overflow-hidden"
+            style={{ background: "#05060a" }}
         >
             {/* WebGL canvas layer */}
             <div className="absolute inset-0 z-0">
                 <BioCoreSphere />
             </div>
 
-            {/* Vignette over canvas to blend edges */}
+            {/* Vignette over canvas */}
             <div className="absolute inset-0 z-10 pointer-events-none hero-vignette" />
 
-            {/* Top bar: coordinates / timestamp */}
-            <div className="absolute top-8 left-24 md:left-32 right-10 z-20 flex justify-between items-center text-[10px] font-mono tracking-label text-[var(--text-dim)]">
-                <div data-testid="hero-coord" className="anim-fade-in delay-1">
-                    48°51′N · 2°21′E / STUDIO—01
-                </div>
-                <div className="hidden sm:block anim-fade-in delay-2">
-                    CATALOG / 2024—Ω
-                </div>
+            {/* Top-right: AVAILABLE FOR PROJECTS */}
+            <div
+                data-testid="hero-availability"
+                className="absolute top-7 right-10 z-20 flex items-center gap-2 anim-fade-in delay-1"
+            >
+                <span
+                    className="inline-block w-1.5 h-1.5 rounded-full"
+                    style={{
+                        background: "#6a00ff",
+                        boxShadow: "0 0 8px 1px rgba(106,0,255,0.85)",
+                    }}
+                />
+                <span className="font-mono text-[10px] tracking-label text-[var(--text-dim)] uppercase">
+                    Available for Projects
+                </span>
+            </div>
+
+            {/* SIGNAL HUD (upper-right of sphere) */}
+            <div
+                data-testid="hud-signal"
+                className="absolute top-[18%] right-[26%] z-20 hidden lg:flex items-center gap-2 anim-fade-in delay-3"
+            >
+                <span className="block w-2 h-2 border border-[var(--text-dim)] rotate-45 opacity-70" />
+                <span className="font-mono text-[10px] tracking-label text-[var(--text-dim)]">
+                    SIGNAL 23.7
+                </span>
+            </div>
+
+            {/* AMPLITUDE HUD (lower-right of sphere) */}
+            <div
+                data-testid="hud-amplitude"
+                className="absolute bottom-[24%] right-[24%] z-20 hidden lg:flex items-center gap-2 anim-fade-in delay-3"
+            >
+                <span
+                    className="block h-px w-10"
+                    style={{ background: "rgba(208,208,208,0.4)" }}
+                />
+                <span className="font-mono text-[10px] tracking-label text-[var(--text-dim)]">
+                    AMPLITUDE 84%
+                </span>
             </div>
 
             {/* LEFT: headline block */}
             <div
                 data-testid="hero-left"
-                className="absolute left-24 md:left-32 top-1/2 -translate-y-1/2 z-20 max-w-[620px] pr-6"
+                className="absolute left-28 md:left-36 top-[18%] z-20 max-w-[640px] pr-6"
             >
                 <div
                     data-testid="hero-label"
-                    className="font-mono text-[11px] tracking-label text-[var(--text-dim)] mb-6 flex items-center gap-3 anim-slide-left delay-1"
+                    className="font-mono text-[10px] tracking-label text-[var(--text-dim)] mb-7 uppercase anim-slide-left delay-1"
                 >
-                    <span
-                        className="inline-block w-2 h-2 rounded-full"
-                        style={{
-                            background: "#6a00ff",
-                            boxShadow: "0 0 10px 2px rgba(106,0,255,0.7)",
-                        }}
-                    />
-                    GUITARIST · PRODUCER · COMPOSER
+                    Guitarist · Producer · Composer
                 </div>
 
                 <h1
                     data-testid="hero-headline"
-                    className="hero-headline font-display uppercase text-white"
+                    className="hero-headline font-display uppercase headline-stone"
                     style={{
-                        fontSize: "clamp(3.6rem, 8.4vw, 8.6rem)",
-                        lineHeight: "0.88",
+                        fontSize: "clamp(3.6rem, 8.6vw, 9.2rem)",
+                        lineHeight: "0.92",
                         letterSpacing: "0.005em",
                         fontWeight: 400,
                     }}
                 >
                     <span className="block anim-slide-left delay-2">Heavy</span>
-                    <span
-                        className="block anim-slide-left delay-3"
-                        style={{
-                            color: "transparent",
-                            WebkitTextStroke: "1px rgba(208,208,208,0.55)",
-                        }}
-                    >
-                        Atmospheres
-                    </span>
-                    <span className="block anim-slide-left delay-4">
-                        Precisely
-                    </span>
-                    <span
-                        className="block anim-slide-left delay-5"
-                        style={{
-                            background:
-                                "linear-gradient(90deg, #d0d0d0 0%, #6a00ff 70%, #1a2a6c 100%)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                            backgroundClip: "text",
-                        }}
-                    >
-                        Crafted
-                    </span>
+                    <span className="block anim-slide-left delay-3">Atmospheres</span>
+                    <span className="block anim-slide-left delay-4">Precisely</span>
+                    <span className="block anim-slide-left delay-5">Crafted</span>
                 </h1>
+
+                {/* Divider tick */}
+                <div
+                    className="mt-9 mb-5 h-px w-10 anim-fade-in delay-5"
+                    style={{ background: "rgba(208,208,208,0.35)" }}
+                />
 
                 <p
                     data-testid="hero-sub"
-                    className="mt-8 max-w-[420px] text-sm md:text-[15px] leading-relaxed text-[var(--text)] opacity-80 anim-fade-up delay-5"
+                    className="max-w-[400px] text-sm md:text-[14px] leading-relaxed text-[var(--text)] opacity-75 anim-fade-up delay-5"
                 >
-                    High-end guitar work, production, and composition for artists
-                    who demand depth, darkness, and clarity.
+                    High-end guitar work, mixing and orchestral composition for artists
+                    who demand darkness, depth and impact.
                 </p>
 
-                <div className="mt-10 anim-fade-up delay-6">
+                <div className="mt-9 anim-fade-up delay-6">
                     <a
                         href="#music"
                         data-testid="hero-cta"
-                        className="btn-outline"
+                        className="btn-box"
                     >
-                        <span>View Work</span>
-                        <ArrowUpRight size={14} strokeWidth={1.5} />
+                        <span>VIEW WORK</span>
+                        <span className="btn-arrow">
+                            <ArrowRight size={14} strokeWidth={1.5} />
+                        </span>
                     </a>
                 </div>
             </div>
@@ -114,47 +126,24 @@ export default function Hero() {
             <div
                 id="gear"
                 data-testid="hero-right"
-                className="hidden md:block absolute right-10 lg:right-16 top-1/2 -translate-y-1/2 z-20 w-[300px]"
+                className="hidden md:block absolute right-10 lg:right-14 top-[34%] z-20"
             >
-                <div className="font-mono text-[10px] tracking-label text-[var(--text-dim)] mb-6 flex items-center gap-3 anim-slide-right delay-3">
-                    <span className="h-px w-8 bg-[var(--line-strong)]" />
-                    SERVICES
+                <div className="font-mono text-[10px] tracking-label text-[var(--text-dim)] mb-6 uppercase anim-slide-right delay-3">
+                    Services
                 </div>
                 <ul data-testid="services-list" className="flex flex-col">
                     {SERVICES.map((s, i) => (
                         <li
                             key={s}
                             data-testid={`service-item-${i}`}
-                            className="service-item anim-slide-right"
-                            style={{ animationDelay: `${400 + i * 120}ms` }}
+                            className="service-row anim-slide-right"
+                            style={{ animationDelay: `${380 + i * 110}ms` }}
                         >
-                            <span>{s}</span>
-                            <span className="idx">
-                                {String(i + 1).padStart(2, "0")}
-                            </span>
+                            <span className="service-bar" aria-hidden="true" />
+                            <span className="service-text">{s}</span>
                         </li>
                     ))}
                 </ul>
-
-                <div className="mt-8 font-mono text-[10px] tracking-label text-[var(--text-dim)] anim-fade-up delay-6">
-                    <div className="flex items-center justify-between">
-                        <span>BOOKING / 2025</span>
-                        <span className="text-white" style={{ textShadow: "0 0 8px rgba(106,0,255,0.5)" }}>OPEN</span>
-                    </div>
-                </div>
-            </div>
-
-            {/* Bottom-left: tagline scroll */}
-            <div className="hidden md:flex absolute left-24 md:left-32 bottom-8 z-20 items-center gap-4 text-[10px] font-mono tracking-label text-[var(--text-dim)]">
-                <span className="anim-fade-in delay-6">SCROLL</span>
-                <span
-                    className="h-px w-16"
-                    style={{
-                        background:
-                            "linear-gradient(90deg, rgba(208,208,208,0.35), transparent)",
-                    }}
-                />
-                <span className="anim-fade-in delay-6">MUSIC · ABOUT · CONTACT</span>
             </div>
         </section>
     );

@@ -88,95 +88,167 @@ a, button {
     text-shadow: 0 0 20px rgba(26, 42, 108, 0.5);
 }
 
-/* Button outline glow */
-.btn-outline {
+/* Stone metallic headline: light gray gradient, clean and bold */
+.headline-stone {
+    color: rgba(215, 215, 222, 0.95);
+    background: linear-gradient(180deg, #e8e8ec 0%, #c2c2ca 50%, #8e8e98 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.55);
+    filter: contrast(1.04) drop-shadow(0 1px 0 rgba(0,0,0,0.4));
+}
+.headline-stone > span {
+    background: inherit;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Box-style button */
+.btn-box {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.95rem 1.75rem;
-    border: 1px solid var(--line-strong);
+    justify-content: space-between;
+    gap: 1.4rem;
+    min-width: 200px;
+    padding: 0.95rem 1.25rem 0.95rem 1.4rem;
+    border: 1px solid rgba(208, 208, 208, 0.30);
     color: var(--text);
     background: transparent;
     font-family: 'Space Mono', monospace;
     font-size: 0.72rem;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
     transition: border-color 400ms ease, color 400ms ease, box-shadow 500ms ease, background 500ms ease;
     overflow: hidden;
 }
-.btn-outline::before {
+.btn-box .btn-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    color: rgba(208, 208, 208, 0.6);
+    transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1), color 300ms ease;
+}
+.btn-box::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(26, 42, 108, 0.0), rgba(106, 0, 255, 0.12), rgba(26, 42, 108, 0.0));
+    background: linear-gradient(90deg, rgba(106,0,255,0.0), rgba(106,0,255,0.10), rgba(106,0,255,0.0));
     transform: translateX(-110%);
     transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.btn-outline:hover {
+.btn-box:hover {
     color: #ffffff;
-    border-color: rgba(106, 0, 255, 0.55);
-    box-shadow: 0 0 0 1px rgba(106, 0, 255, 0.08), 0 0 40px -6px rgba(106, 0, 255, 0.35), inset 0 0 30px -10px rgba(26, 42, 108, 0.6);
+    border-color: rgba(208, 208, 208, 0.65);
+    box-shadow: 0 0 30px -8px rgba(106, 0, 255, 0.45);
 }
-.btn-outline:hover::before {
-    transform: translateX(110%);
+.btn-box:hover .btn-arrow {
+    color: #fff;
+    transform: translateX(4px);
 }
+.btn-box:hover::before { transform: translateX(110%); }
 
-/* Nav link */
-.nav-link {
+/* Horizontal Nav link */
+.nav-link-h {
     font-family: 'Space Mono', monospace;
     font-size: 0.7rem;
     letter-spacing: 0.32em;
-    color: var(--text-dim);
-    transition: color 300ms ease, text-shadow 300ms ease, transform 300ms ease;
-    position: relative;
+    color: rgba(208, 208, 208, 0.55);
+    transition: color 300ms ease, text-shadow 300ms ease;
     display: inline-block;
+    padding: 0.35rem 0.2rem;
+    text-align: center;
 }
-.nav-link:hover {
+.nav-link-h:hover {
     color: #ffffff;
-    text-shadow: 0 0 14px rgba(106, 0, 255, 0.55);
+    text-shadow: 0 0 12px rgba(106, 0, 255, 0.45);
 }
-.nav-link.active {
-    color: #ffffff;
-}
-.nav-link.active::before {
-    content: "";
-    position: absolute;
-    left: -18px;
-    top: 50%;
-    width: 10px;
-    height: 1px;
-    background: rgba(106, 0, 255, 0.9);
-    box-shadow: 0 0 8px rgba(106, 0, 255, 0.8);
-    transform: translateY(-50%);
+.nav-link-h.active { color: #ffffff; }
+.nav-sep {
+    display: block;
+    color: rgba(208, 208, 208, 0.35);
+    font-size: 0.5rem;
+    margin: 0.25rem 0;
 }
 
-/* Service item */
-.service-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 1.1rem 0;
-    border-bottom: 1px solid var(--line);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-weight: 300;
-    font-size: 0.95rem;
-    letter-spacing: 0.04em;
-    transition: color 300ms ease, padding 400ms ease, border-color 400ms ease;
-    cursor: default;
+.social-ico {
+    color: rgba(208, 208, 208, 0.45);
+    transition: color 300ms ease, filter 300ms ease;
 }
-.service-item:hover {
+.social-ico:hover {
     color: #ffffff;
-    padding-left: 0.5rem;
-    border-bottom-color: rgba(106, 0, 255, 0.35);
+    filter: drop-shadow(0 0 6px rgba(106,0,255,0.6));
 }
-.service-item .idx {
+
+/* Service rows: minimal with vertical bar and small caps mono text */
+.service-row {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.55rem 0;
+    color: rgba(208, 208, 208, 0.78);
     font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--text-dim);
-    letter-spacing: 0.15em;
+    font-size: 0.68rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    transition: color 300ms ease, transform 300ms ease;
+    cursor: default;
+    width: 220px;
 }
+.service-row .service-bar {
+    display: block;
+    width: 1px;
+    height: 14px;
+    background: rgba(208, 208, 208, 0.35);
+    transition: background 300ms ease, height 300ms ease;
+}
+.service-row:hover {
+    color: #ffffff;
+    transform: translateX(2px);
+}
+.service-row:hover .service-bar {
+    background: rgba(106, 0, 255, 0.85);
+    height: 18px;
+    box-shadow: 0 0 8px rgba(106,0,255,0.6);
+}
+
+/* Player play button */
+.player-play-btn {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    border: 1px solid rgba(208, 208, 208, 0.25);
+    color: rgba(255,255,255,0.95);
+    background: rgba(8, 9, 13, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 300ms ease, box-shadow 400ms ease, color 300ms ease;
+}
+.player-play-btn:hover {
+    border-color: rgba(106, 0, 255, 0.6);
+    box-shadow: 0 0 18px -2px rgba(106, 0, 255, 0.55);
+}
+
+/* Waveform bar variant for player strip */
+@keyframes wave2 {
+    0%, 100% { transform: scaleY(0.3); opacity: 0.5; }
+    50%      { transform: scaleY(1); opacity: 1; }
+}
+.wave-bar2 {
+    display: inline-block;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(208,208,208,0.7), rgba(106,0,255,0.85));
+    transform-origin: center;
+    animation: wave2 1.4s ease-in-out infinite;
+}
+.wave-bar2.paused { animation-play-state: paused; opacity: 0.3; }
 
 /* Entry animations */
 @keyframes fade-up {
