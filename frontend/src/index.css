@@ -250,6 +250,77 @@ a, button {
 }
 .wave-bar2.paused { animation-play-state: paused; opacity: 0.3; }
 
+/* Services slide-out drawer */
+.services-trigger-fixed {
+    position: fixed;
+    top: 28%;
+    right: 0;
+    z-index: 26;
+    width: 36px;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 400ms ease;
+}
+.services-trigger-fixed::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 12%;
+    bottom: 12%;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, rgba(208,208,208,0.35), transparent);
+    transition: background 400ms ease;
+}
+.services-trigger-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    color: rgba(208, 208, 208, 0.55);
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    transition: color 400ms ease, text-shadow 400ms ease;
+}
+.services-trigger-fixed.is-open .services-trigger-label,
+.services-trigger-fixed:hover .services-trigger-label {
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(106, 0, 255, 0.6);
+}
+.services-trigger-fixed.is-open::before,
+.services-trigger-fixed:hover::before {
+    background: linear-gradient(180deg, transparent, rgba(106,0,255,0.85), transparent);
+}
+
+.services-panel-fixed {
+    position: fixed;
+    top: 50%;
+    right: 36px;
+    transform: translate(24px, -50%);
+    z-index: 25;
+    min-width: 260px;
+    padding: 1.5rem 1.6rem 1.5rem 1.6rem;
+    background: rgba(8, 9, 13, 0.85);
+    border: 1px solid var(--line-strong);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 350ms ease,
+        visibility 350ms ease;
+    box-shadow: 0 20px 60px -20px rgba(106, 0, 255, 0.25);
+}
+.services-panel-fixed.is-open {
+    transform: translate(0, -50%);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
 /* Entry animations */
 @keyframes fade-up {
     from { opacity: 0; transform: translateY(14px); }

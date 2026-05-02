@@ -1,5 +1,5 @@
+import { useState, useRef } from "react";
 import BioCoreSphere from "./BioCoreSphere";
-import { ArrowRight } from "lucide-react";
 
 const SERVICES = [
     "GUITAR RECORDING",
@@ -9,6 +9,20 @@ const SERVICES = [
 ];
 
 export default function Hero() {
+    const [open, setOpen] = useState(false);
+    const closeTimer = useRef(null);
+
+    const handleEnter = () => {
+        if (closeTimer.current) {
+            clearTimeout(closeTimer.current);
+            closeTimer.current = null;
+        }
+        setOpen(true);
+    };
+    const handleLeave = () => {
+        closeTimer.current = setTimeout(() => setOpen(false), 180);
+    };
+
     return (
         <section
             id="work"
@@ -41,31 +55,6 @@ export default function Hero() {
                 </span>
             </div>
 
-            {/* SIGNAL HUD (upper-right of sphere) */}
-            <div
-                data-testid="hud-signal"
-                className="absolute top-[18%] right-[26%] z-20 hidden lg:flex items-center gap-2 anim-fade-in delay-3"
-            >
-                <span className="block w-2 h-2 border border-[var(--text-dim)] rotate-45 opacity-70" />
-                <span className="font-mono text-[10px] tracking-label text-[var(--text-dim)]">
-                    SIGNAL 23.7
-                </span>
-            </div>
-
-            {/* AMPLITUDE HUD (lower-right of sphere) */}
-            <div
-                data-testid="hud-amplitude"
-                className="absolute bottom-[24%] right-[24%] z-20 hidden lg:flex items-center gap-2 anim-fade-in delay-3"
-            >
-                <span
-                    className="block h-px w-10"
-                    style={{ background: "rgba(208,208,208,0.4)" }}
-                />
-                <span className="font-mono text-[10px] tracking-label text-[var(--text-dim)]">
-                    AMPLITUDE 84%
-                </span>
-            </div>
-
             {/* LEFT: headline block */}
             <div
                 data-testid="hero-left"
@@ -82,7 +71,7 @@ export default function Hero() {
                     data-testid="hero-headline"
                     className="hero-headline font-display uppercase headline-stone"
                     style={{
-                        fontSize: "clamp(3.6rem, 8.6vw, 9.2rem)",
+                        fontSize: "clamp(3.4rem, 7.6vw, 8.2rem)",
                         lineHeight: "0.92",
                         letterSpacing: "0.005em",
                         fontWeight: 400,
@@ -107,28 +96,27 @@ export default function Hero() {
                     High-end guitar work, mixing and orchestral composition for artists
                     who demand darkness, depth and impact.
                 </p>
-
-                <div className="mt-9 anim-fade-up delay-6">
-                    <a
-                        href="#music"
-                        data-testid="hero-cta"
-                        className="btn-box"
-                    >
-                        <span>VIEW WORK</span>
-                        <span className="btn-arrow">
-                            <ArrowRight size={14} strokeWidth={1.5} />
-                        </span>
-                    </a>
-                </div>
             </div>
 
-            {/* RIGHT: services list */}
+            {/* RIGHT: services trigger (thin strip on right edge) */}
             <div
                 id="gear"
-                data-testid="hero-right"
-                className="hidden md:block absolute right-10 lg:right-14 top-[34%] z-20"
+                data-testid="services-trigger"
+                className={`services-trigger-fixed hidden md:flex ${open ? "is-open" : ""}`}
+                onMouseEnter={handleEnter}
+                onMouseLeave={handleLeave}
             >
-                <div className="font-mono text-[10px] tracking-label text-[var(--text-dim)] mb-6 uppercase anim-slide-right delay-3">
+                <span className="services-trigger-label">SERVICES</span>
+            </div>
+
+            {/* Sliding panel */}
+            <div
+                data-testid="services-panel"
+                className={`services-panel-fixed hidden md:block ${open ? "is-open" : ""}`}
+                onMouseEnter={handleEnter}
+                onMouseLeave={handleLeave}
+            >
+                <div className="font-mono text-[10px] tracking-label text-[var(--text-dim)] mb-6 uppercase">
                     Services
                 </div>
                 <ul data-testid="services-list" className="flex flex-col">
@@ -136,8 +124,7 @@ export default function Hero() {
                         <li
                             key={s}
                             data-testid={`service-item-${i}`}
-                            className="service-row anim-slide-right"
-                            style={{ animationDelay: `${380 + i * 110}ms` }}
+                            className="service-row"
                         >
                             <span className="service-bar" aria-hidden="true" />
                             <span className="service-text">{s}</span>
