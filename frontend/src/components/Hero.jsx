@@ -93,8 +93,7 @@ export default function Hero() {
                     data-testid="hero-sub"
                     className="max-w-[400px] text-sm md:text-[14px] leading-relaxed text-[var(--text)] opacity-75 anim-fade-up delay-5"
                 >
-                    High-end guitar work, mixing and orchestral composition for artists
-                    who demand darkness, depth and impact.
+                    High-end guitar work, mixing and orchestral composition.
                 </p>
             </div>
 
