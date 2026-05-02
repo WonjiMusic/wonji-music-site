@@ -170,18 +170,26 @@ export default function BioCoreSphere() {
                     float darkPatch = smoothstep(0.15, 0.55, fbm(vPos * 5.5));
                     metal *= (1.0 - darkPatch * 0.45);
 
-                    // PRIMARY VEINS: thin glowing zero-crossing bands (denser, slightly thicker)
-                    float n1 = fbm(vPos * 1.9 + vec3(uTime*0.04, 0.0, 0.0));
-                    float veins = 1.0 - smoothstep(0.0, 0.075, abs(n1));
+                    // FLUID DOMAIN WARP: offset sample point by another fbm for marbled flow
+                    vec3 warp = vec3(
+                        fbm(vPos * 1.6 + vec3(uTime * 0.06, 0.0, 0.0)),
+                        fbm(vPos * 1.6 + vec3(0.0, uTime * 0.05, 0.0)),
+                        fbm(vPos * 1.6 + vec3(0.0, 0.0, uTime * 0.04))
+                    );
+                    vec3 wPos = vPos + warp * 0.18;
+
+                    // PRIMARY VEINS: thin glowing zero-crossing bands of warped noise
+                    float n1 = fbm(wPos * 1.9 + vec3(uTime*0.04, 0.0, 0.0));
+                    float veins = 1.0 - smoothstep(0.0, 0.045, abs(n1));
                     // Secondary medium veins
-                    float n1b = fbm(vPos * 3.0 + vec3(0.0, uTime*0.06, 0.0));
-                    float veinsB = (1.0 - smoothstep(0.0, 0.045, abs(n1b))) * 0.85;
+                    float n1b = fbm(wPos * 3.0 + vec3(0.0, uTime*0.06, 0.0));
+                    float veinsB = (1.0 - smoothstep(0.0, 0.026, abs(n1b))) * 0.8;
                     // Fine micro-veins
-                    float n2 = fbm(vPos * 5.5);
-                    float microVeins = (1.0 - smoothstep(0.0, 0.022, abs(n2))) * 0.6;
+                    float n2 = fbm(wPos * 5.5);
+                    float microVeins = (1.0 - smoothstep(0.0, 0.015, abs(n2))) * 0.55;
                     // Hairline cracks (very tight)
-                    float n3 = fbm(vPos * 9.0);
-                    float hairline = (1.0 - smoothstep(0.0, 0.012, abs(n3))) * 0.4;
+                    float n3 = fbm(wPos * 9.0);
+                    float hairline = (1.0 - smoothstep(0.0, 0.009, abs(n3))) * 0.35;
 
                     // Glow color: blend blue -> purple based on low-freq noise
                     float colMix = fbm(vPos * 1.0 + vec3(uTime*0.04));
@@ -191,19 +199,19 @@ export default function BioCoreSphere() {
                     // Mouse proximity shifts color toward purple
                     glowCol = mix(glowCol, uColorB * 1.8, uProximity * 0.4);
 
-                    // Combine
+                    // Combine — slightly toned down for less dominance
                     vec3 col = metal;
-                    col += glowCol * veins * (2.6 + uProximity * 1.5);
-                    col += glowCol * veinsB * (1.6 + uProximity * 0.7);
-                    col += glowCol * microVeins * 1.0;
-                    col += glowCol * hairline * 0.6;
+                    col += glowCol * veins * (1.7 + uProximity * 1.2);
+                    col += glowCol * veinsB * (1.05 + uProximity * 0.5);
+                    col += glowCol * microVeins * 0.7;
+                    col += glowCol * hairline * 0.4;
                     // Rim light
-                    col += fres * mix(uColorA, uColorB, 0.6) * (0.45 + uProximity * 0.35);
+                    col += fres * mix(uColorA, uColorB, 0.6) * (0.35 + uProximity * 0.3);
                     // Pulse along primary veins
                     float pulse = 0.5 + 0.5 * sin(uTime * 1.1);
-                    col += glowCol * veins * 0.45 * pulse;
+                    col += glowCol * veins * 0.35 * pulse;
                     // Displacement-based highlight (cursor ripples glow more)
-                    col += glowCol * max(vDisp, 0.0) * 1.2;
+                    col += glowCol * max(vDisp, 0.0) * 0.9;
 
                     gl_FragColor = vec4(col, 1.0);
                 }
@@ -448,6 +456,161 @@ export default function BioCoreSphere() {
             const s = Math.sin(x * 12.9898) * 43758.5453;
             return s - Math.floor(s);
         };
+
+        // --- Deep space backdrop: layered nebula + starfield ---
+        // Far-back nebula plane (volumetric-ish via fbm)
+        const nebGeo = new THREE.PlaneGeometry(60, 36);
+        const nebMat = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: uniforms.uTime,
+                uColorA: uniforms.uColorA,
+                uColorB: uniforms.uColorB,
+                uMouse: uniforms.uMouse,
+            },
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            vertexShader: `
+                varying vec2 vUv;
+                void main(){
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                precision highp float;
+                uniform float uTime;
+                uniform vec3 uColorA;
+                uniform vec3 uColorB;
+                uniform vec2 uMouse;
+                varying vec2 vUv;
+
+                vec3 hash3(vec3 p){
+                    p = vec3(dot(p,vec3(127.1,311.7,74.7)),
+                             dot(p,vec3(269.5,183.3,246.1)),
+                             dot(p,vec3(113.5,271.9,124.6)));
+                    return -1.0 + 2.0*fract(sin(p)*43758.5453123);
+                }
+                float noise(vec3 p){
+                    vec3 i = floor(p); vec3 f = fract(p);
+                    vec3 u = f*f*(3.0-2.0*f);
+                    return mix(mix(mix(dot(hash3(i+vec3(0,0,0)),f-vec3(0,0,0)),
+                                       dot(hash3(i+vec3(1,0,0)),f-vec3(1,0,0)),u.x),
+                                   mix(dot(hash3(i+vec3(0,1,0)),f-vec3(0,1,0)),
+                                       dot(hash3(i+vec3(1,1,0)),f-vec3(1,1,0)),u.x),u.y),
+                               mix(mix(dot(hash3(i+vec3(0,0,1)),f-vec3(0,0,1)),
+                                       dot(hash3(i+vec3(1,0,1)),f-vec3(1,0,1)),u.x),
+                                   mix(dot(hash3(i+vec3(0,1,1)),f-vec3(0,1,1)),
+                                       dot(hash3(i+vec3(1,1,1)),f-vec3(1,1,1)),u.x),u.y),u.z);
+                }
+                float fbm(vec3 p){
+                    float v=0.0; float a=0.5;
+                    for(int i=0;i<5;i++){ v+=a*noise(p); p*=2.05; a*=0.5; }
+                    return v;
+                }
+
+                void main(){
+                    vec2 p = (vUv - 0.5);
+                    p.x *= 1.7; // aspect
+                    // Slow drifting nebula clouds (domain warp)
+                    vec3 q = vec3(p * 1.6, uTime * 0.015);
+                    vec3 warp = vec3(fbm(q + 1.7), fbm(q + 9.2), 0.0);
+                    float n = fbm(q + warp * 0.8);
+                    float n2 = fbm(q * 2.4 + warp * 1.3 + 5.0);
+
+                    // Distance from center - vignette toward edges
+                    float r = length(p);
+                    float radial = 1.0 - smoothstep(0.0, 0.95, r);
+
+                    // Two cloud layers - blue base + purple highlights
+                    vec3 colA = uColorA * 0.55; // deep blue
+                    vec3 colB = uColorB * 0.45; // purple
+                    vec3 neb = colA * smoothstep(0.0, 0.7, n) * 0.55;
+                    neb += colB * smoothstep(0.4, 0.9, n2) * 0.45;
+                    // Concentrate around center for depth
+                    neb *= (0.35 + radial * 1.4);
+                    // Subtle parallax shift
+                    neb *= (0.85 + 0.15 * sin(p.x * 3.0 + uTime * 0.1));
+                    // Output as additive layer (alpha = brightness so dark areas show stars behind)
+                    float a = clamp(length(neb) * 2.5, 0.0, 1.0);
+                    gl_FragColor = vec4(neb * 1.4, a);
+                }
+            `,
+        });
+        const nebula = new THREE.Mesh(nebGeo, nebMat);
+        nebula.position.z = -14;
+        scene.add(nebula);
+
+        // Starfield: many tiny points at varying depths for parallax
+        const starCount = 1800;
+        const starGeo = new THREE.BufferGeometry();
+        const starPos = new Float32Array(starCount * 3);
+        const starSize = new Float32Array(starCount);
+        const starHue = new Float32Array(starCount);
+        for (let i = 0; i < starCount; i++) {
+            // Spread in a deep box behind the sphere — keep all stars far back
+            const z = -8 - Math.pow(Math.random(), 1.6) * 22; // -8 .. -30
+            const spread = 18 + Math.abs(z) * 1.4;
+            starPos[i * 3] = (Math.random() - 0.5) * spread;
+            starPos[i * 3 + 1] = (Math.random() - 0.5) * spread * 0.7;
+            starPos[i * 3 + 2] = z;
+            // Most stars tiny pinpricks, very few slightly larger
+            starSize[i] = 0.35 + Math.pow(Math.random(), 2.5) * 1.4;
+            // hue mix bias: blue (0) <-> purple (1)
+            starHue[i] = Math.random();
+        }
+        starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
+        starGeo.setAttribute("aSize", new THREE.BufferAttribute(starSize, 1));
+        starGeo.setAttribute("aHue", new THREE.BufferAttribute(starHue, 1));
+
+        const starMat = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: uniforms.uTime,
+                uColorA: uniforms.uColorA,
+                uColorB: uniforms.uColorB,
+                uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+            },
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            vertexShader: `
+                attribute float aSize;
+                attribute float aHue;
+                uniform float uTime;
+                uniform float uPixelRatio;
+                varying float vHue;
+                varying float vTwinkle;
+                void main(){
+                    vHue = aHue;
+                    // Twinkle per-star
+                    vTwinkle = 0.5 + 0.5 * sin(uTime * (0.6 + aHue*2.0) + aHue * 17.0);
+                    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+                    gl_Position = projectionMatrix * mv;
+                    // attenuate point size by depth; keep small
+                    gl_PointSize = aSize * uPixelRatio * (60.0 / -mv.z);
+                }
+            `,
+            fragmentShader: `
+                precision highp float;
+                uniform vec3 uColorA;
+                uniform vec3 uColorB;
+                varying float vHue;
+                varying float vTwinkle;
+                void main(){
+                    vec2 uv = gl_PointCoord - 0.5;
+                    float d = length(uv);
+                    float core = smoothstep(0.5, 0.05, d);
+                    float halo = smoothstep(0.5, 0.2, d) * 0.18;
+                    vec3 col = mix(uColorA * 1.5, uColorB * 1.3, vHue);
+                    col = mix(col, vec3(0.85, 0.88, 1.0), 0.55);
+                    float intensity = (core + halo) * vTwinkle;
+                    if(intensity < 0.03) discard;
+                    gl_FragColor = vec4(col * intensity, intensity * 0.9);
+                }
+            `,
+        });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
 
         // --- Subtle particle dust around sphere ---
         const pCount = 220;
