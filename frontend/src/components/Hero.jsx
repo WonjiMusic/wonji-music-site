@@ -78,7 +78,7 @@ export default function Hero() {
                     }}
                 >
                     <span className="block anim-slide-left delay-2">Heavy</span>
-                    <span className="block anim-slide-left delay-3">Atmospheres</span>
+                    <span className="block anim-slide-left delay-3">Music</span>
                     <span className="block anim-slide-left delay-4">Precisely</span>
                     <span className="block anim-slide-left delay-5">Crafted</span>
                 </h1>
