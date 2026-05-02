@@ -60,13 +60,13 @@ export default function MusicPlayer() {
                         data-testid="player-track-name"
                         className="text-[12px] text-white tracking-wider-2 uppercase truncate font-medium"
                     >
-                        Arcane Sun
+                        Boxhead (Immortal) OST
                     </div>
                     <div
                         data-testid="player-artist-name"
                         className="font-mono text-[9px] tracking-label text-[var(--text-dim)] uppercase truncate"
                     >
-                        The Voidborn
+                        Wonji
                     </div>
                 </div>
 
