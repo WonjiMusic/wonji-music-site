@@ -23,11 +23,11 @@ export const SECTIONS = {
         subtitle:
             "Original tracks, singles and works in progress. Streaming everywhere once they drop — start with the latest single.",
         body: [
-            { label: "Arcane Sun — Single", meta: "2025" },
-            { label: "Iron Cathedral — Single", meta: "2025" },
-            { label: "Hollow Spire — Demo", meta: "2024 · INSTRUMENTAL" },
-            { label: "Filaments — Demo", meta: "2024" },
-            { label: "Below The Tide — Sketch", meta: "2023" },
+            { label: "Collapse Protocol - BOXHEAD: Immortal OST", meta: "PRODUCED · MIXED · 2025" },
+            { label: "Forgotten Lands", meta: "RECORDED · COMPOSED · 2025" },
+            { label: "A Glimpse Of Epiphany", meta: "RECORDED · COMPOSED · 2025" },
+            { label: "Reach For The Stars Or Fall In Space", meta: "PRODUCED · 2023" },
+            { label: "Prelude To Glory", meta: "RECORDED · COMPOSED · 2023" },
         ],
     },
     about: {
