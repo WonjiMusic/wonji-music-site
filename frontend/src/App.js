@@ -27,18 +27,19 @@ function Shell() {
 
     return (
         <div className="App relative" data-testid="app-root">
-            {/* Global top-left logo (clickable home link) — same row as availability badge */}
+            {/* Global top-left logo (clickable home link) — centered horizontally above
+                the nav column, vertically on the same row as the AVAILABLE FOR PROJECTS badge */}
             <Link
                 to="/"
                 data-testid="nav-logo"
                 aria-label="Home"
-                className="fixed top-5 left-5 md:left-7 z-40 select-none nav-logo-link"
+                className="fixed top-3 left-0 z-40 w-20 md:w-24 flex justify-center select-none nav-logo-link"
             >
                 <img
                     src="/logo.png"
                     alt="Wonji"
-                    width="104"
-                    height="60"
+                    width="84"
+                    height="48"
                     className="logo-img"
                     draggable="false"
                 />

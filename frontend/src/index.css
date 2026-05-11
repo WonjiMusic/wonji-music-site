@@ -476,7 +476,7 @@ a, button {
 }
 .logo-img {
     display: block;
-    width: 104px;
+    width: 84px;
     height: auto;
     user-select: none;
     /* Black background of source PNG blends out against dark page bg */

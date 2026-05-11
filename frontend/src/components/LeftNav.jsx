@@ -37,9 +37,10 @@ export default function LeftNav({ activeSection }) {
             data-testid="left-nav"
             className="fixed left-0 top-0 h-screen w-20 md:w-24 z-30 flex flex-col items-center justify-between py-7"
         >
-            {/* Spacer where the logo used to be — the logo is now a fixed element at top-left
-                aligned with the AVAILABLE FOR PROJECTS row. Keeps the nav vertical rhythm balanced. */}
-            <div aria-hidden="true" className="w-1 h-12" />
+            {/* Spacer where the logo used to be — the logo is now a global fixed element
+                vertically above this nav and horizontally aligned with the AVAILABLE FOR PROJECTS row.
+                The spacer reserves the same vertical area to keep the nav items balanced below. */}
+            <div aria-hidden="true" className="w-1 h-16" />
 
             {/* Nav links */}
             <ul className="flex flex-col gap-0 items-center text-center">
