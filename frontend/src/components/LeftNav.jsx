@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Instagram, Youtube } from "lucide-react";
 
 const NAV = [
-    { id: "home", label: "HOME", to: "/" },
     { id: "work", label: "WORK", to: "/work" },
     { id: "music", label: "MUSIC", to: "/music" },
     { id: "about", label: "ABOUT", to: "/about" },
