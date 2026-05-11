@@ -25,8 +25,8 @@ const Logo = () => (
     <img
         src="/logo.png"
         alt="Logo"
-        width="56"
-        height="32"
+        width="80"
+        height="46"
         className="logo-img"
         draggable="false"
     />
