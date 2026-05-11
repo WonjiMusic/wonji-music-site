@@ -59,9 +59,22 @@ export default function Hero() {
                 className="absolute left-28 md:left-36 top-[18%] z-20 max-w-[640px] pr-6"
             >
                 <div
-                    data-testid="hero-label"
-                    className="font-mono text-[10px] tracking-label text-[var(--text-dim)] mb-7 uppercase anim-slide-left delay-1"
+                    data-testid="hero-artist-name"
+                    className="font-display uppercase headline-stone leading-none mb-3 anim-slide-left delay-1"
+                    style={{
+                        fontSize: "clamp(1.6rem, 2.4vw, 2.4rem)",
+                        letterSpacing: "0.32em",
+                        fontWeight: 400,
+                    }}
                 >
+                    <span>Wonji</span>
+                </div>
+
+                <div
+                    data-testid="hero-label"
+                    className="font-mono text-[10px] tracking-label text-[var(--text-dim)] mb-7 uppercase anim-slide-left delay-1 flex items-center gap-3"
+                >
+                    <span className="h-px w-6" style={{ background: "rgba(106,0,255,0.6)" }} />
                     Guitarist · Producer · Composer
                 </div>
 
