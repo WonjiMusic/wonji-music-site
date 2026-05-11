@@ -297,7 +297,7 @@ a, button {
 .services-panel-fixed {
     position: fixed;
     top: 50%;
-    right: 36px;
+    right: 44px;
     transform: translate(24px, -50%);
     z-index: 25;
     min-width: 260px;
