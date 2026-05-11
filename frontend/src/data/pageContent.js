@@ -10,11 +10,11 @@ export const SECTIONS = {
         subtitle:
             "A curated index of records, scores and collaborations across modern metal, cinematic and post-genre projects.",
         body: [
-            { label: "Iron Cathedral — The Voidborn", meta: "PRODUCED · MIXED · 2025" },
-            { label: "Hollow Spire — Ashbreather", meta: "RECORDED · COMPOSED · 2024" },
-            { label: "Black Sun Rituals — Era Null", meta: "MIXED · MASTERED · 2024" },
-            { label: "Below The Tide — Meridian VII", meta: "COMPOSED · 2023" },
-            { label: "Silent Engine — Korvax", meta: "PRODUCED · 2023" },
+            { label: "Collapse Protocol - BOXHEAD: Immortal OST", meta: "PRODUCED · MIXED · 2025" },
+            { label: "Forgotten Lands", meta: "RECORDED · COMPOSED · 2025" },
+            { label: "A Glimpse Of Epiphany", meta: "RECORDED · COMPOSED · 2025" },
+            { label: "Reach For The Stars Or Fall In Space", meta: "PRODUCED · 2023" },
+            { label: "Prelude To Glory", meta: "RECORDED · COMPOSED · 2023" },
         ],
     },
     music: {
@@ -34,12 +34,12 @@ export const SECTIONS = {
         eyebrow: "02 — Profile",
         title: ["About"],
         subtitle:
-            "Studio-trained guitarist, producer and composer working out of a private facility built around analog warmth and surgical digital control.",
+            "Wonji is a musician, guitarist, producer, and composer with a lifelong background in music and years of live performance experience. Inspired by metal music, cinematic scores, and epic orchestral soundtracks for games, he creates music that blends intensity, emotion, and imagination. With a strong passion for storytelling through sound, his work focuses on creating immersive musical worlds that leave a lasting impact. For Wonji, music is more than entertainment — it’s a way to express something meaningful and leave a legacy that lives on beyond a lifetime.",
         body: [
             { label: "Discipline", meta: "MODERN METAL · CINEMATIC · POST-GENRE" },
             { label: "Background", meta: "12+ YEARS · CONSERVATORY TRAINED" },
-            { label: "Languages", meta: "ENGLISH · FRENCH" },
-            { label: "Studio", meta: "STUDIO—01 · PARIS" },
+            { label: "Languages", meta: "ENGLISH · GREEK · BULGARIAN · GERMAN" },
+            { label: "Studio", meta: "ORPHIC SOUNDWORKS STUDIO · HANNOVER, GERMANY" },
             { label: "Approach", meta: "SLOW, CONSIDERED, ARCHIVAL" },
         ],
     },
@@ -49,11 +49,11 @@ export const SECTIONS = {
         subtitle:
             "A focused, opinionated rig — built for tonal density, fast attack and headroom-on-demand.",
         body: [
-            { label: "Guitars", meta: "AB SOLO · MAYONES DUVELL · STRANDBERG" },
-            { label: "Amps", meta: "DIEZEL VH4 · KEMPER · NEURAL QUAD" },
-            { label: "Interface", meta: "APOLLO X16 · LYNX AURORA(N)" },
-            { label: "Monitors", meta: "GENELEC 8351 · BAREFOOT MM27" },
-            { label: "DAWs", meta: "PRO TOOLS · CUBASE · REAPER" },
+            { label: "Guitars", meta: "IBANEZ PRESTIGE RG1570 · PRS 277 SE BARITONE" },
+            { label: "Amps", meta: "NEURAL DSP QUAD CORTEX · AXE FX ULTRA" },
+            { label: "Interface", meta: "FOCUSRITE SCARLETT 18i20" },
+            { label: "Monitors", meta: "GENELEC 8030CP" },
+            { label: "DAWs", meta: "STUDIO ONE PRO 7 · CUBASE" },
         ],
     },
     contact: {
@@ -62,10 +62,8 @@ export const SECTIONS = {
         subtitle:
             "Booking, sessions, scoring or production conversations. All serious inquiries answered within two business days.",
         body: [
-            { label: "Booking", meta: "BOOKING@WONJI.STUDIO" },
-            { label: "Press", meta: "PRESS@WONJI.STUDIO" },
-            { label: "Studio", meta: "+33 1 00 00 00 00" },
-            { label: "Location", meta: "PARIS · REMOTE STEMS WORLDWIDE" },
+            { label: "Booking", meta: "INFO@WONJIMUSIC.COM" },
+            { label: "Location", meta: "HANNOVER, GERMANY · REMOTE STEMS WORLDWIDE" },
             { label: "Response", meta: "MON—FRI · 48H" },
         ],
     },
@@ -85,7 +83,7 @@ export const SERVICES = {
         ],
         process: [
             "Brief & reference review",
-            "Tone design & re-amp sessions",
+            "Tone design",
             "Multi-pass tracking",
             "Stem export & client review",
         ],
@@ -98,7 +96,7 @@ export const SERVICES = {
         details: [
             { k: "FORMAT", v: "FULL PROJECT · PER-TRACK" },
             { k: "TURNAROUND", v: "3—8 WEEKS" },
-            { k: "DELIVERABLES", v: "STEMS · MIX BOUNCE · PROJECT FILE" },
+            { k: "DELIVERABLES", v: "STEMS · MIX BOUNCE · PROJECT FILE · TABS" },
             { k: "REVISIONS", v: "UNLIMITED WITHIN SCOPE" },
         ],
         process: [
@@ -112,11 +110,11 @@ export const SERVICES = {
         eyebrow: "Service / 03",
         title: ["Composing"],
         subtitle:
-            "Original composition for film, game, trailer and artist projects — orchestral, hybrid metal and atmospheric works built to brief.",
+            "Original composition for film, game, trailer and artist projects — orchestral, hybrid metal and atmospheric works.",
         details: [
             { k: "FORMAT", v: "CUE-BASED · FULL SCORE" },
             { k: "TURNAROUND", v: "VARIES BY SCOPE" },
-            { k: "DELIVERABLES", v: "STEMS · LIVE PARTS · CONDUCTOR SCORE" },
+            { k: "DELIVERABLES", v: "STEMS · SCORES" },
             { k: "RIGHTS", v: "NEGOTIATED PER PROJECT" },
         ],
         process: [
