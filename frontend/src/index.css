@@ -461,8 +461,17 @@ a, button {
     transition: filter 300ms ease, transform 300ms ease;
 }
 .nav-logo-link:hover {
-    filter: drop-shadow(0 0 10px rgba(106, 0, 255, 0.55));
+    filter: drop-shadow(0 0 12px rgba(106, 0, 255, 0.65));
     transform: translateY(-1px);
+}
+.logo-img {
+    display: block;
+    width: 56px;
+    height: auto;
+    user-select: none;
+    /* Black background of source PNG blends out against dark page bg */
+    mix-blend-mode: lighten;
+    filter: drop-shadow(0 0 6px rgba(106, 0, 255, 0.35));
 }
 
 /* Home link on inner pages */

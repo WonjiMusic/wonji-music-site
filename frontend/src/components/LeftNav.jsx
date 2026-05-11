@@ -22,25 +22,14 @@ const SoundCloudIcon = () => (
 );
 
 const Logo = () => (
-    <svg width="26" height="36" viewBox="0 0 26 36" fill="none" aria-hidden="true">
-        <path
-            d="M13 1 L25 9 L24 26 L13 35 L2 26 L1 9 Z"
-            stroke="rgba(208,208,208,0.85)"
-            strokeWidth="0.8"
-            fill="none"
-        />
-        <path
-            d="M13 7 L20 11.5 L19.6 23 L13 28 L6.4 23 L6 11.5 Z"
-            stroke="rgba(106,0,255,0.55)"
-            strokeWidth="0.6"
-            fill="none"
-        />
-        <path
-            d="M13 7 L13 28 M6 11.5 L20 11.5 M6.4 23 L19.6 23"
-            stroke="rgba(208,208,208,0.35)"
-            strokeWidth="0.4"
-        />
-    </svg>
+    <img
+        src="/logo.png"
+        alt="Logo"
+        width="56"
+        height="32"
+        className="logo-img"
+        draggable="false"
+    />
 );
 
 export default function LeftNav({ activeSection }) {
