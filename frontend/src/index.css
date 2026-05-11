@@ -421,6 +421,110 @@ a, button {
     transform: translateX(-3px);
 }
 
+/* Pulsing availability dot */
+.pulse-dot {
+    position: relative;
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    background: #6a00ff;
+    box-shadow: 0 0 6px 1px rgba(106, 0, 255, 0.75);
+    animation: pulse-dot-core 2.6s ease-in-out infinite;
+}
+.pulse-dot::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 9999px;
+    background: rgba(106, 0, 255, 0.6);
+    animation: pulse-dot-ring 2.6s ease-out infinite;
+    z-index: -1;
+}
+@keyframes pulse-dot-core {
+    0%, 100% { box-shadow: 0 0 6px 1px rgba(106, 0, 255, 0.55); }
+    50%      { box-shadow: 0 0 10px 2px rgba(106, 0, 255, 0.95); }
+}
+@keyframes pulse-dot-ring {
+    0%   { transform: scale(0.85); opacity: 0.6; }
+    70%  { transform: scale(2.2);  opacity: 0; }
+    100% { transform: scale(2.2);  opacity: 0; }
+}
+
+/* Contact form */
+.contact-field {
+    display: block;
+    margin-bottom: 1.25rem;
+}
+.contact-field-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: rgba(208, 208, 208, 0.5);
+    text-transform: uppercase;
+    margin-bottom: 0.55rem;
+}
+.contact-required {
+    color: rgba(106, 0, 255, 0.85);
+}
+.contact-input {
+    width: 100%;
+    background: rgba(10, 11, 18, 0.55);
+    border: 1px solid rgba(208, 208, 208, 0.15);
+    border-bottom: 1px solid rgba(208, 208, 208, 0.30);
+    padding: 0.75rem 0.85rem;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    outline: none;
+    transition: border-color 300ms ease, box-shadow 300ms ease, background 300ms ease;
+}
+.contact-input::placeholder {
+    color: rgba(208, 208, 208, 0.32);
+}
+.contact-input:hover {
+    border-color: rgba(208, 208, 208, 0.32);
+}
+.contact-input:focus {
+    border-color: rgba(106, 0, 255, 0.65);
+    box-shadow: 0 0 0 1px rgba(106, 0, 255, 0.12), 0 0 24px -6px rgba(106, 0, 255, 0.35);
+    background: rgba(10, 11, 18, 0.78);
+}
+.contact-textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.55;
+}
+
+.contact-msg {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.55rem;
+    border: 1px solid;
+    animation: fade-up 350ms ease both;
+}
+.contact-msg-success {
+    color: rgba(180, 255, 220, 0.95);
+    border-color: rgba(80, 220, 160, 0.45);
+    background: rgba(20, 40, 32, 0.4);
+}
+.contact-msg-error {
+    color: rgba(255, 200, 200, 0.95);
+    border-color: rgba(220, 80, 100, 0.5);
+    background: rgba(40, 18, 22, 0.4);
+}
+
+.btn-box:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
 /* Section page: body rows (Work / Music / About / Gear / Contact lists) */
 .section-row {
     display: grid;

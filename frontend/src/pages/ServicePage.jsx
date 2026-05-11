@@ -23,13 +23,7 @@ export default function ServicePage() {
 
             {/* Top-right availability badge */}
             <div className="absolute top-7 right-10 z-20 flex items-center gap-2 anim-fade-in delay-1">
-                <span
-                    className="inline-block w-1.5 h-1.5 rounded-full"
-                    style={{
-                        background: "#6a00ff",
-                        boxShadow: "0 0 8px 1px rgba(106,0,255,0.85)",
-                    }}
-                />
+                <span className="pulse-dot" aria-hidden="true" />
                 <span className="font-mono text-[10px] tracking-label text-[var(--text-dim)] uppercase">
                     Available for Projects
                 </span>

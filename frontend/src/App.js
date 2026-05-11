@@ -6,6 +6,7 @@ import Hero from "./components/Hero";
 import MusicPlayer from "./components/MusicPlayer";
 import SectionPage from "./pages/SectionPage";
 import ServicePage from "./pages/ServicePage";
+import ContactPage from "./pages/ContactPage";
 
 function Shell() {
     const location = useLocation();
@@ -30,6 +31,7 @@ function Shell() {
             <main className="relative z-10">
                 <Routes>
                     <Route path="/" element={<Hero />} />
+                    <Route path="/contact" element={<ContactPage />} />
                     <Route path="/:slug" element={<SectionPage />} />
                     <Route path="/services/:slug" element={<ServicePage />} />
                 </Routes>
