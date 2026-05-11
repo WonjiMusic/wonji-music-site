@@ -476,12 +476,12 @@ a, button {
 }
 .logo-img {
     display: block;
-    width: 80px;
+    width: 104px;
     height: auto;
     user-select: none;
     /* Black background of source PNG blends out against dark page bg */
     mix-blend-mode: lighten;
-    filter: drop-shadow(0 0 8px rgba(106, 0, 255, 0.35));
+    filter: drop-shadow(0 0 10px rgba(106, 0, 255, 0.4));
 }
 
 /* Home link on inner pages */

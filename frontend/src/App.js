@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate, Link } from "react-router-dom";
 import "@/App.css";
 import LeftNav from "./components/LeftNav";
 import Hero from "./components/Hero";
@@ -27,6 +27,22 @@ function Shell() {
 
     return (
         <div className="App relative" data-testid="app-root">
+            {/* Global top-left logo (clickable home link) — same row as availability badge */}
+            <Link
+                to="/"
+                data-testid="nav-logo"
+                aria-label="Home"
+                className="fixed top-5 left-5 md:left-7 z-40 select-none nav-logo-link"
+            >
+                <img
+                    src="/logo.png"
+                    alt="Wonji"
+                    width="104"
+                    height="60"
+                    className="logo-img"
+                    draggable="false"
+                />
+            </Link>
             <LeftNav activeSection={active} />
             <main className="relative z-10">
                 <Routes>
