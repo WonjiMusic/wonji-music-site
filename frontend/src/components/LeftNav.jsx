@@ -2,11 +2,12 @@ import { Link } from "react-router-dom";
 import { Instagram, Youtube } from "lucide-react";
 
 const NAV = [
-    { id: "work", label: "WORK" },
-    { id: "music", label: "MUSIC" },
-    { id: "about", label: "ABOUT" },
-    { id: "gear", label: "GEAR" },
-    { id: "contact", label: "CONTACT" },
+    { id: "home", label: "HOME", to: "/" },
+    { id: "work", label: "WORK", to: "/work" },
+    { id: "music", label: "MUSIC", to: "/music" },
+    { id: "about", label: "ABOUT", to: "/about" },
+    { id: "gear", label: "GEAR", to: "/gear" },
+    { id: "contact", label: "CONTACT", to: "/contact" },
 ];
 
 const SpotifyIcon = () => (
@@ -64,11 +65,12 @@ export default function LeftNav({ activeSection }) {
                 {NAV.map((item, idx) => (
                     <li key={item.id} className="flex flex-col items-center">
                         <Link
-                            to={`/${item.id}`}
+                            to={item.to}
                             data-testid={`nav-link-${item.id}`}
                             className={`nav-link-h ${activeSection === item.id ? "active" : ""}`}
                         >
-                            {item.label}
+                            <span className="nav-link-energy" aria-hidden="true" />
+                            <span className="nav-link-text">{item.label}</span>
                         </Link>
                         {idx < NAV.length - 1 && (
                             <span className="nav-sep" aria-hidden="true">·</span>
@@ -77,16 +79,16 @@ export default function LeftNav({ activeSection }) {
                 ))}
             </ul>
 
-            {/* Socials */}
+            {/* Socials — Spotify, Instagram, YouTube, SoundCloud */}
             <div className="flex flex-col gap-5 items-center text-[var(--text-dim)]">
+                <a href="#" data-testid="social-spotify" aria-label="Spotify" className="social-ico">
+                    <SpotifyIcon />
+                </a>
                 <a href="#" data-testid="social-instagram" aria-label="Instagram" className="social-ico">
                     <Instagram size={14} strokeWidth={1.4} />
                 </a>
                 <a href="#" data-testid="social-youtube" aria-label="YouTube" className="social-ico">
                     <Youtube size={16} strokeWidth={1.4} />
-                </a>
-                <a href="#" data-testid="social-spotify" aria-label="Spotify" className="social-ico">
-                    <SpotifyIcon />
                 </a>
                 <a href="#" data-testid="social-soundcloud" aria-label="SoundCloud" className="social-ico">
                     <SoundCloudIcon />

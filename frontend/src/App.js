@@ -13,10 +13,10 @@ function Shell() {
     const [active, setActive] = useState("work");
 
     useEffect(() => {
-        // Derive active section from path: /work -> work, /services/... -> gear, / -> work
+        // Derive active section from path: / -> home, /services/... -> gear, /<slug> -> slug
         const path = location.pathname;
         if (path === "/" || path === "") {
-            setActive("work");
+            setActive("home");
         } else if (path.startsWith("/services")) {
             setActive("gear");
         } else {

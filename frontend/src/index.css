@@ -154,25 +154,77 @@ a, button {
 
 /* Horizontal Nav link */
 .nav-link-h {
+    position: relative;
     font-family: 'Space Mono', monospace;
     font-size: 0.7rem;
     letter-spacing: 0.32em;
     color: rgba(208, 208, 208, 0.55);
     transition: color 300ms ease, text-shadow 300ms ease;
     display: inline-block;
-    padding: 0.35rem 0.2rem;
+    padding: 0.45rem 0.85rem;
     text-align: center;
+    isolation: isolate; /* keeps energy glow contained */
+    overflow: visible;
+}
+.nav-link-text {
+    position: relative;
+    z-index: 1;
+}
+/* Animated "energy" backdrop, only visible on hover/active */
+.nav-link-energy {
+    position: absolute;
+    inset: -4px -10px;
+    z-index: 0;
+    border-radius: 18px;
+    opacity: 0;
+    transition: opacity 380ms ease;
+    pointer-events: none;
+    background:
+        radial-gradient(60% 90% at 20% 50%, rgba(106, 0, 255, 0.55) 0%, transparent 70%),
+        radial-gradient(55% 90% at 80% 50%, rgba(26, 42, 108, 0.65) 0%, transparent 70%),
+        radial-gradient(40% 90% at 50% 50%, rgba(138, 62, 255, 0.30) 0%, transparent 70%);
+    background-size: 220% 100%, 220% 100%, 220% 100%;
+    filter: blur(8px) saturate(1.1);
+    animation: nav-energy-shift 4.2s linear infinite;
+}
+.nav-link-energy::after {
+    content: "";
+    position: absolute;
+    inset: 4px 6px;
+    border-radius: 14px;
+    background: linear-gradient(90deg, transparent, rgba(106, 0, 255, 0.18), transparent);
+    background-size: 200% 100%;
+    animation: nav-energy-shimmer 3s linear infinite;
+    mix-blend-mode: screen;
+}
+.nav-link-h:hover .nav-link-energy,
+.nav-link-h.active .nav-link-energy {
+    opacity: 1;
 }
 .nav-link-h:hover {
     color: #ffffff;
-    text-shadow: 0 0 12px rgba(106, 0, 255, 0.45);
+    text-shadow: 0 0 10px rgba(106, 0, 255, 0.55);
 }
-.nav-link-h.active { color: #ffffff; }
+.nav-link-h.active {
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(106, 0, 255, 0.55);
+}
+
+@keyframes nav-energy-shift {
+    0%   { background-position: 0% 50%, 100% 50%, 50% 50%; }
+    50%  { background-position: 60% 50%, 40% 50%, 30% 50%; }
+    100% { background-position: 100% 50%, 0% 50%, 70% 50%; }
+}
+@keyframes nav-energy-shimmer {
+    0%   { background-position: -150% 50%; }
+    100% { background-position: 250% 50%; }
+}
+
 .nav-sep {
     display: block;
-    color: rgba(208, 208, 208, 0.35);
+    color: rgba(208, 208, 208, 0.30);
     font-size: 0.5rem;
-    margin: 0.25rem 0;
+    margin: 0.15rem 0;
 }
 
 .social-ico {
