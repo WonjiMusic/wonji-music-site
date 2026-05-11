@@ -170,7 +170,7 @@ a, button {
     position: relative;
     z-index: 1;
 }
-/* Animated "energy" backdrop — contained breathing glow + horizontal wave wash */
+/* Animated "energy" backdrop — soft breathing glow + horizontal wave radiating outward */
 .nav-link-energy {
     position: absolute;
     inset: -2px -4px;
@@ -178,52 +178,50 @@ a, button {
     opacity: 0;
     pointer-events: none;
     transition: opacity 420ms ease;
-    overflow: hidden;
+    /* No overflow clipping — let the wave fade off naturally */
 }
 .nav-link-energy::before {
-    /* Soft horizontal breathing glow — stays close to the word */
+    /* Soft breathing glow centered on the word */
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 65% 55% at 50% 50%,
+    background: radial-gradient(ellipse 60% 55% at 50% 50%,
         rgba(138, 62, 255, 0.42) 0%,
         rgba(106, 0, 255, 0.22) 38%,
-        transparent 72%);
+        transparent 75%);
     filter: blur(7px);
     transform-origin: center;
     animation: nav-wave-breathe 3.6s ease-in-out infinite;
     mix-blend-mode: screen;
 }
 .nav-link-energy::after {
-    /* Horizontal wave wash — a thin ripple sweeping across the word */
+    /* Horizontal wave that expands outward from the word center */
     content: "";
     position: absolute;
-    left: -20%;
-    right: -20%;
-    top: 30%;
-    bottom: 30%;
-    background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(138, 62, 255, 0.35) 38%,
-        rgba(255, 255, 255, 0.12) 50%,
-        rgba(138, 62, 255, 0.35) 62%,
-        transparent 100%);
-    background-size: 55% 100%;
+    left: -140%;
+    right: -140%;
+    top: 18%;
+    bottom: 18%;
+    background: radial-gradient(ellipse 22% 90% at 50% 50%,
+        rgba(138, 62, 255, 0.55) 0%,
+        rgba(106, 0, 255, 0.30) 28%,
+        transparent 70%);
     background-repeat: no-repeat;
-    background-position: -60% 50%;
-    filter: blur(5px);
-    animation: nav-wave-sweep 4.8s ease-in-out infinite;
+    filter: blur(6px);
+    transform-origin: center;
+    transform: scaleX(0.45);
+    opacity: 0;
+    animation: nav-wave-radiate 3.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
     mix-blend-mode: screen;
 }
 @keyframes nav-wave-breathe {
-    0%, 100% { transform: scale(0.78); opacity: 0.30; }
-    50%      { transform: scale(1.00); opacity: 0.55; }
+    0%, 100% { transform: scale(0.82); opacity: 0.28; }
+    50%      { transform: scale(1.00); opacity: 0.50; }
 }
-@keyframes nav-wave-sweep {
-    0%   { background-position: -60% 50%; opacity: 0.0; }
-    20%  { opacity: 0.7; }
-    80%  { opacity: 0.7; }
-    100% { background-position: 160% 50%; opacity: 0.0; }
+@keyframes nav-wave-radiate {
+    0%   { transform: scaleX(0.40); opacity: 0; }
+    25%  { opacity: 0.85; }
+    100% { transform: scaleX(3.20); opacity: 0; }
 }
 .nav-link-h:hover .nav-link-energy,
 .nav-link-h.active .nav-link-energy {
