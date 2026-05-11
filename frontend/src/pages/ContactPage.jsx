@@ -6,11 +6,9 @@ import SpaceBackground from "../components/SpaceBackground";
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const INFO = [
-    { k: "BOOKING", v: "BOOKING@WONJI.STUDIO" },
-    { k: "PRESS", v: "PRESS@WONJI.STUDIO" },
-    { k: "STUDIO", v: "+33 1 00 00 00 00" },
-    { k: "LOCATION", v: "PARIS · REMOTE STEMS WORLDWIDE" },
-    { k: "RESPONSE", v: "MON—FRI · 48H" },
+    { k: "BOOKING", v: "info@wonjimusic.com" },
+    { k: "LOCATION", v: "Hannover, Germany · Remote Stems Worldwide" },
+    { k: "RESPONSE", v: "MON—FRI · 12H" },
 ];
 
 export default function ContactPage() {
