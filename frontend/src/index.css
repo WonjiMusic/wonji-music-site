@@ -198,18 +198,18 @@ a, button {
     /* Horizontal wave that expands outward from the word center */
     content: "";
     position: absolute;
-    left: -140%;
-    right: -140%;
+    left: -60%;
+    right: -60%;
     top: 18%;
     bottom: 18%;
-    background: radial-gradient(ellipse 22% 90% at 50% 50%,
+    background: radial-gradient(ellipse 30% 90% at 50% 50%,
         rgba(138, 62, 255, 0.55) 0%,
         rgba(106, 0, 255, 0.30) 28%,
         transparent 70%);
     background-repeat: no-repeat;
     filter: blur(6px);
     transform-origin: center;
-    transform: scaleX(0.45);
+    transform: scaleX(0.55);
     opacity: 0;
     animation: nav-wave-radiate 3.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
     mix-blend-mode: screen;
@@ -219,9 +219,9 @@ a, button {
     50%      { transform: scale(1.00); opacity: 0.50; }
 }
 @keyframes nav-wave-radiate {
-    0%   { transform: scaleX(0.40); opacity: 0; }
+    0%   { transform: scaleX(0.50); opacity: 0; }
     25%  { opacity: 0.85; }
-    100% { transform: scaleX(3.20); opacity: 0; }
+    100% { transform: scaleX(1.60); opacity: 0; }
 }
 .nav-link-h:hover .nav-link-energy,
 .nav-link-h.active .nav-link-energy {
