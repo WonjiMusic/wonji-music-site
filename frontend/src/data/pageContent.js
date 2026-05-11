@@ -62,8 +62,8 @@ export const SECTIONS = {
         subtitle:
             "Booking, sessions, scoring or production conversations. All serious inquiries answered within two business days.",
         body: [
-            { label: "Booking", meta: "BOOKING@NOX.STUDIO" },
-            { label: "Press", meta: "PRESS@NOX.STUDIO" },
+            { label: "Booking", meta: "BOOKING@WONJI.STUDIO" },
+            { label: "Press", meta: "PRESS@WONJI.STUDIO" },
             { label: "Studio", meta: "+33 1 00 00 00 00" },
             { label: "Location", meta: "PARIS · REMOTE STEMS WORLDWIDE" },
             { label: "Response", meta: "MON—FRI · 48H" },
