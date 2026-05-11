@@ -1,29 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, Pause } from "lucide-react";
 
-/**
- * MusicPlayer — visual "Now Playing" module with a real-time reactive waveform.
- *
- * To make the bars react to a real track:
- *   1. Drop your track URL into TRACK_URL below (or set REACT_APP_TRACK_URL in /app/frontend/.env)
- *   2. The audio MUST be served with permissive CORS headers (Access-Control-Allow-Origin)
- *      OR be hosted on the same origin as the app. Most CDNs (Cloudflare R2, S3 with CORS,
- *      SoundCloud direct mp3, etc.) work fine.
- *
- * If TRACK_URL is empty, the bars fall back to the previous CSS animation.
- */
-const TRACK_URL = process.env.REACT_APP_TRACK_URL || "";
-
+const TRACK_URL = "/Boxhead (Immortal) OST.mp3";
 const BARS = 60;
 
 export default function MusicPlayer() {
-<<<<<<< HEAD
-    const audioRef = useRef(null);
     const [playing, setPlaying] = useState(false);
-    const BARS = 60;
-=======
-    const [playing, setPlaying] = useState(false);
-    const [hasAudio] = useState(!!TRACK_URL);
     const [levels, setLevels] = useState(() => new Array(BARS).fill(0));
 
     const audioRef = useRef(null);
@@ -32,112 +14,102 @@ export default function MusicPlayer() {
     const sourceRef = useRef(null);
     const rafRef = useRef(null);
 
-    // Initialise Web Audio graph on first user gesture
     const initAudio = () => {
         if (audioCtxRef.current || !audioRef.current) return;
+
         try {
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             if (!AudioCtx) return;
+
             const ctx = new AudioCtx();
             const analyser = ctx.createAnalyser();
-            analyser.fftSize = 256;            // 128 frequency bins
+            analyser.fftSize = 256;
             analyser.smoothingTimeConstant = 0.78;
+
             const src = ctx.createMediaElementSource(audioRef.current);
             src.connect(analyser);
             analyser.connect(ctx.destination);
+
             audioCtxRef.current = ctx;
             analyserRef.current = analyser;
             sourceRef.current = src;
         } catch (e) {
-            // Likely CORS — bars will simply not react; keep playback if possible
-            // eslint-disable-next-line no-console
             console.warn("Audio analysis unavailable:", e);
         }
     };
 
     const togglePlay = async () => {
-        if (!hasAudio || !audioRef.current) {
-            // Visual-only mode toggle
-            setPlaying((p) => !p);
-            return;
-        }
-        if (playing) {
-            audioRef.current.pause();
-            setPlaying(false);
-        } else {
-            initAudio();
-            try {
-                if (audioCtxRef.current?.state === "suspended") {
-                    await audioCtxRef.current.resume();
-                }
-                await audioRef.current.play();
-                setPlaying(true);
-            } catch (e) {
-                // eslint-disable-next-line no-console
-                console.warn("Playback failed:", e);
-            }
-        }
-    };
-
-    // Real-time bar update loop
-    useEffect(() => {
-        if (!playing || !analyserRef.current) return undefined;
-        const analyser = analyserRef.current;
-        const data = new Uint8Array(analyser.frequencyBinCount);
-
-        const loop = () => {
-            analyser.getByteFrequencyData(data);
-            const next = new Array(BARS);
-            // Spread frequency bins across visible bars, weighting lows slightly more
-            // (typical music energy distribution).
-            for (let i = 0; i < BARS; i++) {
-                const t = i / BARS;
-                // Logarithmic-ish mapping: cluster low/mid bins
-                const idxF = Math.pow(t, 1.6) * (data.length - 1);
-                const lo = Math.floor(idxF);
-                const hi = Math.min(data.length - 1, lo + 1);
-                const frac = idxF - lo;
-                const v = (data[lo] * (1 - frac) + data[hi] * frac) / 255;
-                next[i] = Math.min(1, v * 1.35); // slight boost
-            }
-            setLevels(next);
-            rafRef.current = requestAnimationFrame(loop);
-        };
-        loop();
-        return () => cancelAnimationFrame(rafRef.current);
-    }, [playing]);
-
-    // Sync internal state if audio ends naturally
-    useEffect(() => {
-        const a = audioRef.current;
-        if (!a) return undefined;
-        const onEnd = () => setPlaying(false);
-        a.addEventListener("ended", onEnd);
-        return () => a.removeEventListener("ended", onEnd);
-    }, []);
-
-    // Cleanup audio context on unmount
-    useEffect(() => {
-        return () => {
-            cancelAnimationFrame(rafRef.current);
-            if (audioCtxRef.current) {
-                audioCtxRef.current.close().catch(() => {});
-            }
-        };
-    }, []);
->>>>>>> 0092836 (auto-commit for 10c9bc49-c295-4eb6-bdb0-1c5ca9c0919f)
-
-    const togglePlay = () => {
         if (!audioRef.current) return;
 
         if (playing) {
             audioRef.current.pause();
             setPlaying(false);
         } else {
-            audioRef.current.play();
-            setPlaying(true);
+            initAudio();
+
+            try {
+                if (audioCtxRef.current?.state === "suspended") {
+                    await audioCtxRef.current.resume();
+                }
+
+                await audioRef.current.play();
+                setPlaying(true);
+            } catch (e) {
+                console.warn("Playback failed:", e);
+            }
         }
     };
+
+    useEffect(() => {
+        if (!playing || !analyserRef.current) return undefined;
+
+        const analyser = analyserRef.current;
+        const data = new Uint8Array(analyser.frequencyBinCount);
+
+        const loop = () => {
+            analyser.getByteFrequencyData(data);
+
+            const next = new Array(BARS);
+
+            for (let i = 0; i < BARS; i++) {
+                const t = i / BARS;
+                const idxF = Math.pow(t, 1.6) * (data.length - 1);
+                const lo = Math.floor(idxF);
+                const hi = Math.min(data.length - 1, lo + 1);
+                const frac = idxF - lo;
+                const v = (data[lo] * (1 - frac) + data[hi] * frac) / 255;
+
+                next[i] = Math.min(1, v * 1.35);
+            }
+
+            setLevels(next);
+            rafRef.current = requestAnimationFrame(loop);
+        };
+
+        loop();
+
+        return () => cancelAnimationFrame(rafRef.current);
+    }, [playing]);
+
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return undefined;
+
+        const onEnd = () => setPlaying(false);
+        audio.addEventListener("ended", onEnd);
+
+        return () => audio.removeEventListener("ended", onEnd);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            cancelAnimationFrame(rafRef.current);
+
+            if (audioCtxRef.current) {
+                audioCtxRef.current.close().catch(() => {});
+            }
+        };
+    }, []);
 
     return (
         <div
@@ -145,19 +117,12 @@ export default function MusicPlayer() {
             className="fixed bottom-7 right-8 z-40 hidden sm:flex flex-col items-stretch gap-2"
             style={{ width: "330px" }}
         >
-<<<<<<< HEAD
-            <audio ref={audioRef} src="/Boxhead (Immortal) OST.mp3" />
-=======
-            {/* Hidden audio element. crossOrigin enables analyser when host serves CORS headers */}
-            {hasAudio && (
-                <audio
-                    ref={audioRef}
-                    src={TRACK_URL}
-                    crossOrigin="anonymous"
-                    preload="auto"
-                />
-            )}
->>>>>>> 0092836 (auto-commit for 10c9bc49-c295-4eb6-bdb0-1c5ca9c0919f)
+            <audio
+                ref={audioRef}
+                src={TRACK_URL}
+                crossOrigin="anonymous"
+                preload="auto"
+            />
 
             <div
                 className="flex items-center gap-3 p-2 pr-3 backdrop-blur-md border border-[var(--line-strong)]"
@@ -187,12 +152,14 @@ export default function MusicPlayer() {
                     <div className="font-mono text-[9px] tracking-label text-[var(--text-dim)] uppercase">
                         Now Playing
                     </div>
+
                     <div
                         data-testid="player-track-name"
                         className="text-[12px] text-white tracking-wider-2 uppercase truncate font-medium"
                     >
                         Boxhead (Immortal) OST
                     </div>
+
                     <div
                         data-testid="player-artist-name"
                         className="font-mono text-[9px] tracking-label text-[var(--text-dim)] uppercase truncate"
@@ -215,19 +182,17 @@ export default function MusicPlayer() {
                 </button>
             </div>
 
-<<<<<<< HEAD
-=======
-            {/* Waveform: live-reactive when track is loaded, animated otherwise */}
->>>>>>> 0092836 (auto-commit for 10c9bc49-c295-4eb6-bdb0-1c5ca9c0919f)
             <div
                 data-testid="player-waveform"
                 className="flex items-center justify-between h-6 px-1"
                 aria-hidden="true"
             >
                 {Array.from({ length: BARS }).map((_, i) => {
-                    const live = playing && hasAudio && analyserRef.current;
+                    const live = playing && analyserRef.current;
+
                     if (live) {
                         const h = Math.max(2, Math.round(levels[i] * 22));
+
                         return (
                             <span
                                 key={i}
@@ -236,7 +201,9 @@ export default function MusicPlayer() {
                             />
                         );
                     }
+
                     const h = 4 + ((i * 53) % 16);
+
                     return (
                         <span
                             key={i}
