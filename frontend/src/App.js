@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import "@/App.css";
 import LeftNav from "./components/LeftNav";
 import Hero from "./components/Hero";
@@ -31,6 +31,7 @@ function Shell() {
             <main className="relative z-10">
                 <Routes>
                     <Route path="/" element={<Hero />} />
+                    <Route path="/work" element={<Navigate to="/music" replace />} />
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="/:slug" element={<SectionPage />} />
                     <Route path="/services/:slug" element={<ServicePage />} />

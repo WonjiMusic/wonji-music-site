@@ -18,20 +18,20 @@ export const SECTIONS = {
         ],
     },
     music: {
-        eyebrow: "02 — Catalog",
+        eyebrow: "01 — Catalog",
         title: ["Music"],
         subtitle:
-            "Original compositions, soundtracks and singles. Streaming everywhere — start with the EP Void Signals.",
+            "Original tracks, singles and works in progress. Streaming everywhere once they drop — start with the latest single.",
         body: [
-            { label: "Void Signals — EP", meta: "2025 · 6 TRACKS" },
             { label: "Arcane Sun — Single", meta: "2025" },
-            { label: "Black Liturgy — Album", meta: "2024 · 11 TRACKS" },
-            { label: "Filaments — Score", meta: "2023 · FILM" },
-            { label: "Demonstrations Vol. I", meta: "2022 · INSTRUMENTAL" },
+            { label: "Iron Cathedral — Single", meta: "2025" },
+            { label: "Hollow Spire — Demo", meta: "2024 · INSTRUMENTAL" },
+            { label: "Filaments — Demo", meta: "2024" },
+            { label: "Below The Tide — Sketch", meta: "2023" },
         ],
     },
     about: {
-        eyebrow: "03 — Profile",
+        eyebrow: "02 — Profile",
         title: ["About"],
         subtitle:
             "Studio-trained guitarist, producer and composer working out of a private facility built around analog warmth and surgical digital control.",
@@ -44,7 +44,7 @@ export const SECTIONS = {
         ],
     },
     gear: {
-        eyebrow: "04 — Signal Chain",
+        eyebrow: "03 — Signal Chain",
         title: ["Gear"],
         subtitle:
             "A focused, opinionated rig — built for tonal density, fast attack and headroom-on-demand.",
@@ -57,7 +57,7 @@ export const SECTIONS = {
         ],
     },
     contact: {
-        eyebrow: "05 — Inquiries",
+        eyebrow: "04 — Inquiries",
         title: ["Contact"],
         subtitle:
             "Booking, sessions, scoring or production conversations. All serious inquiries answered within two business days.",

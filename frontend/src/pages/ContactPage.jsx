@@ -82,7 +82,7 @@ export default function ContactPage() {
                 className="relative z-20 px-28 md:px-36 pt-[14%] pb-28 max-w-[1400px]"
             >
                 <div className="font-mono text-[10px] tracking-label text-[var(--text-dim)] mb-7 uppercase anim-slide-left delay-1">
-                    05 — Inquiries
+                    04 — Inquiries
                 </div>
 
                 <h1

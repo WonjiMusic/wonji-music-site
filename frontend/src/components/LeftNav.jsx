@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Instagram, Youtube } from "lucide-react";
 
 const NAV = [
-    { id: "work", label: "WORK", to: "/work" },
     { id: "music", label: "MUSIC", to: "/music" },
     { id: "about", label: "ABOUT", to: "/about" },
     { id: "gear", label: "GEAR", to: "/gear" },
@@ -69,16 +68,42 @@ export default function LeftNav({ activeSection }) {
 
             {/* Socials — Spotify, Instagram, YouTube, SoundCloud */}
             <div className="flex flex-col gap-5 items-center text-[var(--text-dim)]">
-                <a href="#" data-testid="social-spotify" aria-label="Spotify" className="social-ico">
+                <a
+                    href="#"
+                    data-testid="social-spotify"
+                    aria-label="Spotify"
+                    className="social-ico"
+                >
                     <SpotifyIcon />
                 </a>
-                <a href="#" data-testid="social-instagram" aria-label="Instagram" className="social-ico">
+                <a
+                    href="https://www.instagram.com/wonji_music/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="social-instagram"
+                    aria-label="Instagram"
+                    className="social-ico"
+                >
                     <Instagram size={14} strokeWidth={1.4} />
                 </a>
-                <a href="#" data-testid="social-youtube" aria-label="YouTube" className="social-ico">
+                <a
+                    href="https://www.youtube.com/@WonjiMusic"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="social-youtube"
+                    aria-label="YouTube"
+                    className="social-ico"
+                >
                     <Youtube size={16} strokeWidth={1.4} />
                 </a>
-                <a href="#" data-testid="social-soundcloud" aria-label="SoundCloud" className="social-ico">
+                <a
+                    href="https://soundcloud.com/wonjimusic"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="social-soundcloud"
+                    aria-label="SoundCloud"
+                    className="social-ico"
+                >
                     <SoundCloudIcon />
                 </a>
             </div>
