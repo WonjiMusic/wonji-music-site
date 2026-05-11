@@ -308,6 +308,17 @@ a, button {
 }
 .wave-bar2.paused { animation-play-state: paused; opacity: 0.3; }
 
+/* Live waveform bar (driven by Web Audio API analyser) */
+.wave-bar-live {
+    display: inline-block;
+    width: 2px;
+    min-height: 2px;
+    background: linear-gradient(180deg, rgba(208, 208, 208, 0.85), rgba(106, 0, 255, 0.95));
+    transform-origin: center;
+    transition: height 60ms linear;
+    box-shadow: 0 0 4px rgba(106, 0, 255, 0.45);
+}
+
 /* Services slide-out drawer */
 .services-trigger-fixed {
     position: fixed;
