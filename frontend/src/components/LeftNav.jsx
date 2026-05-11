@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Instagram, Youtube } from "lucide-react";
 
 const NAV = [
@@ -20,7 +21,6 @@ const SoundCloudIcon = () => (
     </svg>
 );
 
-// Diamond/shield logo
 const Logo = () => (
     <svg width="26" height="36" viewBox="0 0 26 36" fill="none" aria-hidden="true">
         <path
@@ -49,22 +49,27 @@ export default function LeftNav({ activeSection }) {
             data-testid="left-nav"
             className="fixed left-0 top-0 h-screen w-20 md:w-24 z-30 flex flex-col items-center justify-between py-7"
         >
-            {/* Logo */}
-            <div data-testid="nav-logo" className="select-none">
+            {/* Logo — also functions as Home link */}
+            <Link
+                to="/"
+                data-testid="nav-logo"
+                aria-label="Home"
+                className="select-none nav-logo-link"
+            >
                 <Logo />
-            </div>
+            </Link>
 
-            {/* Nav links - horizontal labels with dot separators */}
+            {/* Nav links */}
             <ul className="flex flex-col gap-0 items-center text-center">
                 {NAV.map((item, idx) => (
                     <li key={item.id} className="flex flex-col items-center">
-                        <a
-                            href={`#${item.id}`}
+                        <Link
+                            to={`/${item.id}`}
                             data-testid={`nav-link-${item.id}`}
                             className={`nav-link-h ${activeSection === item.id ? "active" : ""}`}
                         >
                             {item.label}
-                        </a>
+                        </Link>
                         {idx < NAV.length - 1 && (
                             <span className="nav-sep" aria-hidden="true">·</span>
                         )}
@@ -74,36 +79,16 @@ export default function LeftNav({ activeSection }) {
 
             {/* Socials */}
             <div className="flex flex-col gap-5 items-center text-[var(--text-dim)]">
-                <a
-                    href="#"
-                    data-testid="social-instagram"
-                    aria-label="Instagram"
-                    className="social-ico"
-                >
+                <a href="#" data-testid="social-instagram" aria-label="Instagram" className="social-ico">
                     <Instagram size={14} strokeWidth={1.4} />
                 </a>
-                <a
-                    href="#"
-                    data-testid="social-youtube"
-                    aria-label="YouTube"
-                    className="social-ico"
-                >
+                <a href="#" data-testid="social-youtube" aria-label="YouTube" className="social-ico">
                     <Youtube size={16} strokeWidth={1.4} />
                 </a>
-                <a
-                    href="#"
-                    data-testid="social-spotify"
-                    aria-label="Spotify"
-                    className="social-ico"
-                >
+                <a href="#" data-testid="social-spotify" aria-label="Spotify" className="social-ico">
                     <SpotifyIcon />
                 </a>
-                <a
-                    href="#"
-                    data-testid="social-soundcloud"
-                    aria-label="SoundCloud"
-                    className="social-ico"
-                >
+                <a href="#" data-testid="social-soundcloud" aria-label="SoundCloud" className="social-ico">
                     <SoundCloudIcon />
                 </a>
             </div>

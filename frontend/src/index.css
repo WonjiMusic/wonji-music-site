@@ -314,12 +314,199 @@ a, button {
         visibility 350ms ease;
     box-shadow: 0 20px 60px -20px rgba(106, 0, 255, 0.25);
 }
+/* ========================================================================
+   Template page styles — SpaceBackground, SectionPage, ServicePage
+   ======================================================================== */
 .services-panel-fixed.is-open {
     transform: translate(0, -50%);
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
 }
+
+/* CSS-only deep space backdrop (no WebGL — used on inner pages) */
+.space-bg {
+    position: absolute;
+    inset: 0;
+    background-color: #05060a;
+    background-image:
+        radial-gradient(ellipse at 22% 30%, rgba(106, 0, 255, 0.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 78% 70%, rgba(26, 42, 108, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 50%, rgba(106, 0, 255, 0.04) 0%, transparent 70%);
+    overflow: hidden;
+    z-index: 0;
+}
+.space-bg-stars {
+    position: absolute;
+    inset: -10%;
+    background-image:
+        radial-gradient(1px 1px at 23px 17px, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at 78px 142px, rgba(208,208,255,0.7), transparent),
+        radial-gradient(1.5px 1.5px at 145px 88px, rgba(255,255,255,0.85), transparent),
+        radial-gradient(1px 1px at 210px 200px, rgba(208,180,255,0.7), transparent),
+        radial-gradient(1px 1px at 50px 250px, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1.5px 1.5px at 280px 60px, rgba(180,180,255,0.85), transparent),
+        radial-gradient(1px 1px at 340px 290px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 110px 340px, rgba(180,160,255,0.65), transparent),
+        radial-gradient(1px 1px at 370px 150px, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1.5px 1.5px at 250px 380px, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at 30px 390px, rgba(208,180,255,0.6), transparent),
+        radial-gradient(1px 1px at 180px 30px, rgba(255,255,255,0.6), transparent);
+    background-size: 400px 400px;
+    background-repeat: repeat;
+    animation: drift 240s linear infinite;
+    opacity: 0.7;
+}
+.space-bg-stars-2 {
+    background-image:
+        radial-gradient(1px 1px at 70px 50px, rgba(255,255,255,0.5), transparent),
+        radial-gradient(0.8px 0.8px at 150px 130px, rgba(180,180,255,0.45), transparent),
+        radial-gradient(1px 1px at 260px 90px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(0.8px 0.8px at 320px 240px, rgba(208,180,255,0.5), transparent),
+        radial-gradient(1px 1px at 90px 310px, rgba(255,255,255,0.45), transparent),
+        radial-gradient(0.8px 0.8px at 200px 360px, rgba(180,160,255,0.4), transparent),
+        radial-gradient(1px 1px at 380px 350px, rgba(255,255,255,0.55), transparent);
+    background-size: 500px 500px;
+    animation: drift 320s linear infinite reverse;
+    opacity: 0.55;
+}
+.space-bg-glow {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 50% 55%, rgba(106, 0, 255, 0.07), transparent 60%);
+    animation: glow-pulse 12s ease-in-out infinite;
+}
+@keyframes drift {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-200px, -100px, 0); }
+}
+@keyframes glow-pulse {
+    0%, 100% { opacity: 0.6; }
+    50%      { opacity: 1.0; }
+}
+
+/* Nav logo as home link */
+.nav-logo-link {
+    display: inline-block;
+    transition: filter 300ms ease, transform 300ms ease;
+}
+.nav-logo-link:hover {
+    filter: drop-shadow(0 0 10px rgba(106, 0, 255, 0.55));
+    transform: translateY(-1px);
+}
+
+/* Home link on inner pages */
+.home-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    color: rgba(208, 208, 208, 0.55);
+    text-transform: uppercase;
+    padding: 0.4rem 0.2rem;
+    transition: color 300ms ease, text-shadow 300ms ease, transform 300ms ease;
+}
+.home-link:hover {
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(106, 0, 255, 0.55);
+    transform: translateX(-2px);
+}
+.home-link svg {
+    transition: transform 300ms ease;
+}
+.home-link:hover svg {
+    transform: translateX(-3px);
+}
+
+/* Section page: body rows (Work / Music / About / Gear / Contact lists) */
+.section-row {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1.15rem 0;
+    border-bottom: 1px solid var(--line);
+    transition: padding 400ms ease, border-color 400ms ease;
+    cursor: default;
+}
+.section-row:hover {
+    padding-left: 0.5rem;
+    border-bottom-color: rgba(106, 0, 255, 0.35);
+}
+.section-row-num {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: rgba(208, 208, 208, 0.45);
+}
+.section-row-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: rgba(232, 232, 236, 0.95);
+    letter-spacing: 0.01em;
+}
+.section-row-meta {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: rgba(208, 208, 208, 0.45);
+    text-transform: uppercase;
+}
+
+/* Service page details rows */
+.service-detail-row {
+    display: grid;
+    grid-template-columns: 110px 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+}
+.service-detail-key {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: rgba(208, 208, 208, 0.45);
+    text-transform: uppercase;
+}
+.service-detail-divider {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(208,208,208,0.18), transparent);
+}
+.service-detail-val {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: rgba(232, 232, 236, 0.92);
+    text-transform: uppercase;
+}
+
+/* Service process steps */
+.service-step {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+    transition: padding 400ms ease, border-color 400ms ease;
+}
+.service-step:hover {
+    padding-left: 0.4rem;
+    border-bottom-color: rgba(106, 0, 255, 0.35);
+}
+.service-step-num {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: rgba(208, 208, 208, 0.4);
+}
+.service-step-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.98rem;
+    color: rgba(232, 232, 236, 0.95);
+    letter-spacing: 0.005em;
+}
+/* ======================================================================== */
 
 /* Entry animations */
 @keyframes fade-up {

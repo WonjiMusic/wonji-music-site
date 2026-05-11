@@ -1,11 +1,12 @@
 import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import BioCoreSphere from "./BioCoreSphere";
 
 const SERVICES = [
-    "GUITAR RECORDING",
-    "PRODUCTION",
-    "COMPOSING",
-    "MIXING & MASTERING",
+    { slug: "guitar-recording", label: "GUITAR RECORDING" },
+    { slug: "production", label: "PRODUCTION" },
+    { slug: "composing", label: "COMPOSING" },
+    { slug: "mixing-mastering", label: "MIXING & MASTERING" },
 ];
 
 export default function Hero() {
@@ -119,14 +120,15 @@ export default function Hero() {
                     Services
                 </div>
                 <ul data-testid="services-list" className="flex flex-col">
-                    {SERVICES.map((s, i) => (
+                    {SERVICES.map((s) => (
                         <li
-                            key={s}
-                            data-testid={`service-item-${i}`}
-                            className="service-row"
+                            key={s.slug}
+                            data-testid={`service-item-${s.slug}`}
                         >
-                            <span className="service-bar" aria-hidden="true" />
-                            <span className="service-text">{s}</span>
+                            <Link to={`/services/${s.slug}`} className="service-row">
+                                <span className="service-bar" aria-hidden="true" />
+                                <span className="service-text">{s.label}</span>
+                            </Link>
                         </li>
                     ))}
                 </ul>
