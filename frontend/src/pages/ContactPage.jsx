@@ -8,7 +8,7 @@ const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const INFO = [
     { k: "BOOKING", v: "info@wonjimusic.com" },
     { k: "LOCATION", v: "Hannover, Germany · Remote Stems Worldwide" },
-    { k: "RESPONSE", v: "MON—FRI · 12H" },
+    { k: "RESPONSE", v: "MON—FRI · 48H" },
 ];
 
 export default function ContactPage() {
