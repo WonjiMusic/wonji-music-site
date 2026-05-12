@@ -69,7 +69,7 @@ export default function ContactPage() {
             <Link
                 to="/"
                 data-testid="home-button"
-                className="absolute top-7 left-32 md:left-40 z-20 home-link"
+                className="absolute top-7 left-32 md:left-40 z-30 home-link"
             >
                 <ArrowLeft size={12} strokeWidth={1.4} />
                 <span>HOME</span>
