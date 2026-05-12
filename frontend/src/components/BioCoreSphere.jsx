@@ -1,15 +1,27 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { usePlayer } from "../context/PlayerContext";
 
 /**
  * BioCoreSphere
  * A WebGL "bio-core": a dark organic sphere with cracked metal surface,
  * glowing internal veins, and outward energy tendrils. Reacts to mouse movement
  * with subtle distortion, slow rotation and parallax.
+ *
+ * When the global MusicPlayer is playing, the entire core + tendrils gently
+ * pulse with a heartbeat rhythm (lub-dub) for added depth.
  */
 export default function BioCoreSphere() {
     const mountRef = useRef(null);
     const mouseRef = useRef({ x: 0, y: 0, tx: 0, ty: 0, proximity: 0, tProx: 0 });
+    const { playing } = usePlayer();
+    const playingRef = useRef(false);
+
+    // Mirror the latest `playing` value into a ref so the Three.js animate loop
+    // can read it without re-mounting the scene.
+    useEffect(() => {
+        playingRef.current = playing;
+    }, [playing]);
 
     useEffect(() => {
         const mount = mountRef.current;
@@ -672,6 +684,19 @@ export default function BioCoreSphere() {
         };
         window.addEventListener("resize", onResize);
 
+        // --- Heartbeat state ---
+        // Eases from 0 (paused) → 1 (playing) so the pulse fades in/out instead of snapping.
+        let beatIntensity = 0;
+        // Heartbeat: a periodic "lub-dub" — two short pulses per cycle.
+        // T = 0.85s ≈ 70 BPM. Returns ~0..1.
+        const heartbeat = (time) => {
+            const T = 0.85;
+            const tp = (time % T) / T; // 0..1 within cycle
+            const lub = Math.exp(-Math.pow((tp - 0.06) / 0.05, 2));
+            const dub = 0.55 * Math.exp(-Math.pow((tp - 0.24) / 0.06, 2));
+            return lub + dub; // peaks around 1.0
+        };
+
         // --- Render loop ---
         const clock = new THREE.Clock();
         let frameId;
@@ -688,6 +713,16 @@ export default function BioCoreSphere() {
             m.proximity += (m.tProx - m.proximity) * 0.06;
             uniforms.uMouse.value.set(m.x, m.y);
             uniforms.uProximity.value = m.proximity;
+
+            // --- Heartbeat ease + scale ---
+            const target = playingRef.current ? 1 : 0;
+            beatIntensity += (target - beatIntensity) * 0.04; // ~1s ease
+            const beat = heartbeat(t) * beatIntensity;
+            const beatScale = 1 + beat * 0.028; // ±2.8% — subtle
+            sphere.scale.setScalar(beatScale);
+            core.scale.setScalar(1 + beat * 0.045); // inner core pulses a bit more
+            tendrilsGroup.scale.setScalar(1 + beat * 0.018);
+            halo.scale.setScalar(1 + beat * 0.022);
 
             // Slow, heavy rotation
             sphere.rotation.y += dt * 0.09;
