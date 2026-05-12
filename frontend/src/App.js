@@ -8,6 +8,7 @@ import SectionPage from "./pages/SectionPage";
 import ServicePage from "./pages/ServicePage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
+import { PlayerProvider } from "./context/PlayerContext";
 
 function Shell() {
     const location = useLocation();
@@ -63,9 +64,11 @@ function Shell() {
 
 function App() {
     return (
-        <BrowserRouter>
-            <Shell />
-        </BrowserRouter>
+        <PlayerProvider>
+            <BrowserRouter>
+                <Shell />
+            </BrowserRouter>
+        </PlayerProvider>
     );
 }
 

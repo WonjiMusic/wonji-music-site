@@ -1,0 +1,47 @@
+{
+  "summary": "First comprehensive test of Wonji landing page. Backend: 5/5 pass (root, contact valid -> 200 + Mongo persistence with email_status='skipped_not_configured', 3 validation cases -> 422). Frontend: 14/15 pass — clickable tracks, player title sync, next/prev, volume slider drag (audio.volume=0.2 verified), mute toggle, About portrait, Contact form fields, Gear, Service page all work. One real bug: HOME button on /services/guitar-recording (and likely all ServicePage routes) is non-clickable via real mouse — elementFromPoint(190,42) returns service-content div, not the home-button Link.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "ServicePage (and likely SectionPage) HOME link",
+        "issue": "HOME button is visually covered by a sibling div with the same z-index (z-20). document.elementFromPoint over the HOME button returns data-testid='service-content' instead of data-testid='home-button'. Real mouse clicks therefore never navigate; only programmatic .click() works. Reproducible on /services/guitar-recording at coords (192, 42).",
+        "selector": "[data-testid=\"home-button\"]",
+        "priority": "HIGH"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_api.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Fix HOME button stacking on ServicePage.jsx (and audit SectionPage.jsx): the <Link data-testid=\"home-button\"> currently shares z-20 with the content wrapper that comes later in DOM and visually overlaps it. Bump the HOME link to z-30 (or higher than service-content/section-content), or change pointer-events / restructure DOM so the link sits above the content layer at coords (~192,42). Same fix likely needed on SectionPage even if direct goto navigation hid it in this test.",
+    "Optional: log a warning if RESEND_API_KEY is configured but CONTACT_RECIPIENT_EMAIL is empty (currently silently degrades to 'stored')."
+  ],
+  "critical_code_review_comments": [
+    "server.py line 127: logger.info is called inside submit_contact but logger is defined at module bottom (line 173). Works at runtime because module fully loads before requests hit, but cosmetically should be moved/declared earlier.",
+    "PlayerContext.PLAYLIST: all 6 tracks point to the same MP3 — confirmed by user as intentional placeholder; flag for future content swap.",
+    "MusicPlayer.jsx: the analyser is created on first play; if user changes volume before pressing play, audio.volume is still applied correctly via separate useEffect — OK.",
+    "ServicePage.jsx / SectionPage.jsx: same DOM/z-index pattern duplicated. Consider extracting shared <PageShell> to avoid the HOME-button overlap regression repeating.",
+    "Three.js canvas + 'load' event never settles — testing must use domcontentloaded (no functional impact, but be aware for future e2e tests)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_api.py (new)"
+  ],
+  "success_rate": {
+    "backend": "100%",
+    "frontend": "93%"
+  },
+  "test_credentials": "N/A — no auth in this app",
+  "seed_data_creation": "Single TEST_-prefixed contact submission created and cleaned up inside test_contact_valid_payload_stored",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend test file at /app/backend/tests/test_api.py — run with `pytest /app/backend/tests/test_api.py -v --junitxml=/app/test_reports/pytest/pytest_results.xml`. For frontend, use viewport 1920x1080; do NOT wait_for_load_state('load') because Three.js keeps it busy — use 'domcontentloaded' + a 2s sleep. Music player is hidden below sm breakpoint. After fixing the HOME button z-index, retest by issuing a real mouse click (not .evaluate(()=>btn.click())) on /services/guitar-recording and any section page (e.g. /music) and verify URL becomes '/'.",
+  "rca_of_the_issue": "HOME button overlay bug — In ServicePage.jsx, both the HOME <Link> (line 33-40) and the content wrapper <div data-testid='service-content'> (line 43-46) are children of the same parent with `relative z-20`. The Link uses `absolute top-7 left-32`, but the content wrapper, which appears AFTER the Link in DOM order and has `pt-[16%]`, has its bounding box starting at y=0 and spanning the full viewport width — so it visually paints on top of the Link at the same stack level. Browsers use 'last DOM node wins at same z-index' for hit-testing, so document.elementFromPoint at the HOME coords returns service-content, swallowing the click. Mitigation: raise z-index of the HOME link to z-30, or set `pointer-events:none` on the service-content wrapper and re-enable on its inner interactive children, or move the HOME link to appear AFTER the content wrapper in DOM order."
+}

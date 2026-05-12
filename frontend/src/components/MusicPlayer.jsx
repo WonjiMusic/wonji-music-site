@@ -1,12 +1,24 @@
 import { useEffect, useRef, useState } from "react";
-import { Play, Pause } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
+import { usePlayer } from "../context/PlayerContext";
 
-const TRACK_URL = "/Boxhead (Immortal) OST.mp3";
 const BARS = 60;
 
 export default function MusicPlayer() {
-    const [playing, setPlaying] = useState(false);
+    const {
+        currentTrack,
+        currentIndex,
+        playing,
+        setPlaying,
+        togglePlay,
+        next,
+        prev,
+        volume,
+        setVolume,
+    } = usePlayer();
+
     const [levels, setLevels] = useState(() => new Array(BARS).fill(0));
+    const [muted, setMuted] = useState(false);
 
     const audioRef = useRef(null);
     const audioCtxRef = useRef(null);
@@ -16,20 +28,16 @@ export default function MusicPlayer() {
 
     const initAudio = () => {
         if (audioCtxRef.current || !audioRef.current) return;
-
         try {
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             if (!AudioCtx) return;
-
             const ctx = new AudioCtx();
             const analyser = ctx.createAnalyser();
             analyser.fftSize = 256;
             analyser.smoothingTimeConstant = 0.78;
-
             const src = ctx.createMediaElementSource(audioRef.current);
             src.connect(analyser);
             analyser.connect(ctx.destination);
-
             audioCtxRef.current = ctx;
             analyserRef.current = analyser;
             sourceRef.current = src;
@@ -38,39 +46,52 @@ export default function MusicPlayer() {
         }
     };
 
-    const togglePlay = async () => {
-        if (!audioRef.current) return;
-
+    // Sync `playing` state with the <audio> element
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
         if (playing) {
-            audioRef.current.pause();
-            setPlaying(false);
-        } else {
             initAudio();
-
-            try {
-                if (audioCtxRef.current?.state === "suspended") {
-                    await audioCtxRef.current.resume();
-                }
-
-                await audioRef.current.play();
-                setPlaying(true);
-            } catch (e) {
-                console.warn("Playback failed:", e);
+            if (audioCtxRef.current?.state === "suspended") {
+                audioCtxRef.current.resume().catch(() => {});
             }
+            audio.play().catch((e) => {
+                console.warn("Playback failed:", e);
+                setPlaying(false);
+            });
+        } else {
+            audio.pause();
         }
-    };
+    }, [playing, currentIndex, setPlaying]);
 
+    // Reload source when currentIndex changes
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+        audio.load();
+        if (playing) {
+            audio.play().catch(() => {});
+        }
+        // intentionally not depending on `playing` here to avoid double-load
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentIndex]);
+
+    // Apply volume + mute
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+        audio.volume = muted ? 0 : volume;
+    }, [volume, muted]);
+
+    // Waveform analyser loop
     useEffect(() => {
         if (!playing || !analyserRef.current) return undefined;
-
         const analyser = analyserRef.current;
         const data = new Uint8Array(analyser.frequencyBinCount);
 
         const loop = () => {
             analyser.getByteFrequencyData(data);
-
-            const next = new Array(BARS);
-
+            const nxt = new Array(BARS);
             for (let i = 0; i < BARS; i++) {
                 const t = i / BARS;
                 const idxF = Math.pow(t, 1.6) * (data.length - 1);
@@ -78,33 +99,27 @@ export default function MusicPlayer() {
                 const hi = Math.min(data.length - 1, lo + 1);
                 const frac = idxF - lo;
                 const v = (data[lo] * (1 - frac) + data[hi] * frac) / 255;
-
-                next[i] = Math.min(1, v * 1.35);
+                nxt[i] = Math.min(1, v * 1.35);
             }
-
-            setLevels(next);
+            setLevels(nxt);
             rafRef.current = requestAnimationFrame(loop);
         };
-
         loop();
-
         return () => cancelAnimationFrame(rafRef.current);
     }, [playing]);
 
+    // Auto-advance on track end
     useEffect(() => {
         const audio = audioRef.current;
         if (!audio) return undefined;
-
-        const onEnd = () => setPlaying(false);
+        const onEnd = () => next();
         audio.addEventListener("ended", onEnd);
-
         return () => audio.removeEventListener("ended", onEnd);
-    }, []);
+    }, [next]);
 
     useEffect(() => {
         return () => {
             cancelAnimationFrame(rafRef.current);
-
             if (audioCtxRef.current) {
                 audioCtxRef.current.close().catch(() => {});
             }
@@ -115,11 +130,11 @@ export default function MusicPlayer() {
         <div
             data-testid="music-player"
             className="fixed bottom-7 right-8 z-40 hidden sm:flex flex-col items-stretch gap-2"
-            style={{ width: "330px" }}
+            style={{ width: "360px" }}
         >
             <audio
                 ref={audioRef}
-                src={TRACK_URL}
+                src={currentTrack.url}
                 crossOrigin="anonymous"
                 preload="auto"
             />
@@ -157,7 +172,7 @@ export default function MusicPlayer() {
                         data-testid="player-track-name"
                         className="text-[12px] text-white tracking-wider-2 uppercase truncate font-medium"
                     >
-                        Boxhead (Immortal) OST
+                        {currentTrack.title}
                     </div>
 
                     <div
@@ -168,18 +183,74 @@ export default function MusicPlayer() {
                     </div>
                 </div>
 
+                <div className="flex items-center gap-1.5">
+                    <button
+                        data-testid="player-prev-button"
+                        onClick={prev}
+                        aria-label="Previous track"
+                        className="player-ctrl-btn"
+                    >
+                        <SkipBack size={11} strokeWidth={1.5} fill="currentColor" />
+                    </button>
+
+                    <button
+                        data-testid="player-play-button"
+                        onClick={togglePlay}
+                        aria-label={playing ? "Pause" : "Play"}
+                        className="player-play-btn"
+                    >
+                        {playing ? (
+                            <Pause size={12} strokeWidth={1.5} fill="currentColor" />
+                        ) : (
+                            <Play size={12} strokeWidth={1.5} fill="currentColor" />
+                        )}
+                    </button>
+
+                    <button
+                        data-testid="player-next-button"
+                        onClick={next}
+                        aria-label="Next track"
+                        className="player-ctrl-btn"
+                    >
+                        <SkipForward size={11} strokeWidth={1.5} fill="currentColor" />
+                    </button>
+                </div>
+            </div>
+
+            {/* Volume bar */}
+            <div
+                className="flex items-center gap-2 px-1"
+                data-testid="player-volume"
+            >
                 <button
-                    data-testid="player-play-button"
-                    onClick={togglePlay}
-                    aria-label={playing ? "Pause" : "Play"}
-                    className="player-play-btn"
+                    type="button"
+                    onClick={() => setMuted((m) => !m)}
+                    aria-label={muted ? "Unmute" : "Mute"}
+                    data-testid="player-mute-button"
+                    className="text-[var(--text-dim)] hover:text-white transition-colors"
                 >
-                    {playing ? (
-                        <Pause size={12} strokeWidth={1.5} fill="currentColor" />
+                    {muted || volume === 0 ? (
+                        <VolumeX size={11} strokeWidth={1.5} />
                     ) : (
-                        <Play size={12} strokeWidth={1.5} fill="currentColor" />
+                        <Volume2 size={11} strokeWidth={1.5} />
                     )}
                 </button>
+                <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={muted ? 0 : volume}
+                    onChange={(e) => {
+                        const v = parseFloat(e.target.value);
+                        setVolume(v);
+                        if (v > 0 && muted) setMuted(false);
+                    }}
+                    aria-label="Volume"
+                    data-testid="player-volume-slider"
+                    className="player-volume-slider flex-1"
+                    style={{ "--vol": `${(muted ? 0 : volume) * 100}%` }}
+                />
             </div>
 
             <div
@@ -189,10 +260,8 @@ export default function MusicPlayer() {
             >
                 {Array.from({ length: BARS }).map((_, i) => {
                     const live = playing && analyserRef.current;
-
                     if (live) {
                         const h = Math.max(2, Math.round(levels[i] * 22));
-
                         return (
                             <span
                                 key={i}
@@ -201,9 +270,7 @@ export default function MusicPlayer() {
                             />
                         );
                     }
-
                     const h = 4 + ((i * 53) % 16);
-
                     return (
                         <span
                             key={i}

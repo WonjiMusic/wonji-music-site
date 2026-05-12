@@ -1,16 +1,29 @@
 import { Link, useParams, Navigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Play, Pause } from "lucide-react";
 import SpaceBackground from "../components/SpaceBackground";
 import { SECTIONS } from "../data/pageContent";
+import { usePlayer, PLAYLIST } from "../context/PlayerContext";
 
 /**
  * Template page for the 5 nav sections (Work, Music, About, Gear, Contact).
- * No 3D sphere; just the deep-space CSS backdrop + content.
+ * The Music page is special: rows are clickable, driving the global MusicPlayer.
  */
 export default function SectionPage() {
     const { slug } = useParams();
     const data = SECTIONS[slug];
+    const { currentIndex, playing, playIndex, togglePlay } = usePlayer();
+
     if (!data) return <Navigate to="/" replace />;
+
+    const isMusic = slug === "music";
+
+    const onTrackClick = (idx) => {
+        if (idx === currentIndex) {
+            togglePlay();
+        } else {
+            playIndex(idx);
+        }
+    };
 
     return (
         <section
@@ -77,23 +90,64 @@ export default function SectionPage() {
                     {data.subtitle}
                 </p>
 
-                {/* Body list */}
-                <ul className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-0 max-w-[920px]">
-                    {data.body.map((item, i) => (
-                        <li
-                            key={item.label}
-                            data-testid={`section-row-${i}`}
-                            className="section-row anim-fade-up"
-                            style={{ animationDelay: `${400 + i * 80}ms` }}
-                        >
-                            <span className="section-row-num font-mono">
-                                {String(i + 1).padStart(2, "0")}
-                            </span>
-                            <span className="section-row-label">{item.label}</span>
-                            <span className="section-row-meta font-mono">{item.meta}</span>
-                        </li>
-                    ))}
-                </ul>
+                {isMusic ? (
+                    <ul
+                        data-testid="music-track-list"
+                        className="mt-16 grid grid-cols-1 gap-y-0 max-w-[920px]"
+                    >
+                        {PLAYLIST.map((track, i) => {
+                            const isActive = i === currentIndex;
+                            const isPlayingThis = isActive && playing;
+                            return (
+                                <li
+                                    key={`${track.title}-${i}`}
+                                    data-testid={`music-track-${i}`}
+                                    data-active={isActive ? "true" : "false"}
+                                    className={`music-track-row anim-fade-up ${isActive ? "is-active" : ""}`}
+                                    style={{ animationDelay: `${400 + i * 80}ms` }}
+                                >
+                                    <button
+                                        type="button"
+                                        onClick={() => onTrackClick(i)}
+                                        aria-label={isPlayingThis ? `Pause ${track.title}` : `Play ${track.title}`}
+                                        data-testid={`music-track-play-${i}`}
+                                        className="music-track-btn"
+                                    >
+                                        <span className="music-track-num font-mono">
+                                            {String(i + 1).padStart(2, "0")}
+                                        </span>
+                                        <span className="music-track-icon" aria-hidden="true">
+                                            {isPlayingThis ? (
+                                                <Pause size={12} strokeWidth={1.5} fill="currentColor" />
+                                            ) : (
+                                                <Play size={12} strokeWidth={1.5} fill="currentColor" />
+                                            )}
+                                        </span>
+                                        <span className="music-track-label">{track.title}</span>
+                                        <span className="music-track-meta font-mono">{track.meta}</span>
+                                    </button>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                ) : (
+                    <ul className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-0 max-w-[920px]">
+                        {data.body.map((item, i) => (
+                            <li
+                                key={item.label}
+                                data-testid={`section-row-${i}`}
+                                className="section-row anim-fade-up"
+                                style={{ animationDelay: `${400 + i * 80}ms` }}
+                            >
+                                <span className="section-row-num font-mono">
+                                    {String(i + 1).padStart(2, "0")}
+                                </span>
+                                <span className="section-row-label">{item.label}</span>
+                                <span className="section-row-meta font-mono">{item.meta}</span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
         </section>
     );
