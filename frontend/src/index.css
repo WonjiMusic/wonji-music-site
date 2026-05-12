@@ -1306,19 +1306,6 @@ a, button {
     flex: 1 1 auto;
 }
 .player-meta-row .player-seek-slider::-webkit-slider-thumb {
-
-/* Honeypot — visually hidden from humans, still in DOM for bots */
-.honeypot-field {
-    position: absolute;
-    left: -10000px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    opacity: 0;
-    pointer-events: none;
-}
-
     width: 8px;
     height: 8px;
     box-shadow: 0 0 5px rgba(106, 0, 255, 0.55);
@@ -1497,3 +1484,16 @@ a, button {
         margin-top: 0.25rem;
     }
 }
+
+/* Honeypot — visually hidden from humans, still in DOM for bots */
+.honeypot-field {
+    position: absolute !important;
+    left: -10000px !important;
+    top: auto !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
