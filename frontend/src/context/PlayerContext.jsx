@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useRef } from "react";
 
 /**
  * Shared player state for the global MusicPlayer + Music page track list.
@@ -50,6 +50,10 @@ export function PlayerProvider({ children }) {
     const [playing, setPlaying] = useState(false);
     const [volume, setVolume] = useState(0.8);
 
+    // Shared AnalyserNode ref — set by MusicPlayer after createMediaElementSource,
+    // consumed by visuals (BioCoreSphere) to react to live audio.
+    const analyserRef = useRef(null);
+
     const playIndex = useCallback((idx) => {
         setCurrentIndex(((idx % PLAYLIST.length) + PLAYLIST.length) % PLAYLIST.length);
         setPlaying(true);
@@ -81,6 +85,7 @@ export function PlayerProvider({ children }) {
                 togglePlay,
                 next,
                 prev,
+                analyserRef,
             }}
         >
             {children}

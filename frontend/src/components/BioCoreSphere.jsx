@@ -14,7 +14,7 @@ import { usePlayer } from "../context/PlayerContext";
 export default function BioCoreSphere() {
     const mountRef = useRef(null);
     const mouseRef = useRef({ x: 0, y: 0, tx: 0, ty: 0, proximity: 0, tProx: 0 });
-    const { playing } = usePlayer();
+    const { playing, analyserRef: sharedAnalyserRef } = usePlayer();
     const playingRef = useRef(false);
 
     // Mirror the latest `playing` value into a ref so the Three.js animate loop
@@ -56,6 +56,7 @@ export default function BioCoreSphere() {
             uTime: { value: 0 },
             uMouse: { value: new THREE.Vector2(0, 0) },
             uProximity: { value: 0 },
+            uBeat: { value: 0 },
             uColorA: { value: new THREE.Color(0x2a1a52) }, // deep purple-blue
             uColorB: { value: new THREE.Color(0x8a3eff) }, // electric purple
             uColorBase: { value: new THREE.Color(0x141520) },
@@ -325,6 +326,7 @@ export default function BioCoreSphere() {
                         uColorA: uniforms.uColorA,
                         uColorB: uniforms.uColorB,
                         uProximity: uniforms.uProximity,
+                        uBeat: uniforms.uBeat,
                         uSeed: { value: state.seed + layer.offset * 100 },
                         uHue: { value: layer.hue },
                         uOpacity: { value: layer.opacity },
@@ -349,6 +351,7 @@ export default function BioCoreSphere() {
                         uniform float uHue;
                         uniform float uOpacity;
                         uniform float uProximity;
+                        uniform float uBeat;
                         varying float vT;
                         void main(){
                             // Fade in at root, fade out at tip; never quite reach tip end
@@ -359,7 +362,10 @@ export default function BioCoreSphere() {
                             float pulse = 0.45 + 0.55 * sin(uTime*1.6 + uSeed + vT*9.0);
                             vec3 col = mix(uColorA, uColorB, clamp(uHue + vT*0.5, 0.0, 1.0)) * 1.9;
                             float intensity = (0.25 + 0.65*pulse) * (1.0 + uProximity*0.6);
-                            gl_FragColor = vec4(col * intensity, fade * uOpacity);
+                            // Audio-reactive: beat brightens whole strand + boosts opacity slightly
+                            intensity *= 1.0 + uBeat * 0.55;
+                            float alpha = fade * uOpacity * (1.0 + uBeat * 0.25);
+                            gl_FragColor = vec4(col * intensity, alpha);
                         }
                     `,
                 });
@@ -684,17 +690,23 @@ export default function BioCoreSphere() {
         };
         window.addEventListener("resize", onResize);
 
-        // --- Heartbeat state ---
-        // Eases from 0 (paused) → 1 (playing) so the pulse fades in/out instead of snapping.
-        let beatIntensity = 0;
-        // Heartbeat: a periodic "lub-dub" — two short pulses per cycle.
-        // T = 0.85s ≈ 70 BPM. Returns ~0..1.
-        const heartbeat = (time) => {
-            const T = 0.85;
-            const tp = (time % T) / T; // 0..1 within cycle
-            const lub = Math.exp(-Math.pow((tp - 0.06) / 0.05, 2));
-            const dub = 0.55 * Math.exp(-Math.pow((tp - 0.24) / 0.06, 2));
-            return lub + dub; // peaks around 1.0
+        // --- Audio-reactive heartbeat state ---
+        // Reads the live AnalyserNode (when a track is playing) and pulls a
+        // low-band (kick + sub-bass) energy envelope with fast attack / slow decay.
+        // This makes the sphere genuinely beat WITH the music — not on a fixed timer.
+        let beat = 0;          // smoothed bass energy 0..1
+        let beatIntensity = 0; // ease 0..1 — fades the whole effect in/out around play/pause
+        const freqData = new Uint8Array(128); // fftSize is 256 in MusicPlayer → 128 bins
+        const sampleBeat = () => {
+            const analyser = sharedAnalyserRef && sharedAnalyserRef.current;
+            if (!analyser) return 0;
+            analyser.getByteFrequencyData(freqData);
+            // Low-band: bins 1..6 ≈ ~85Hz .. ~1kHz at 44.1kHz/256 — kick + bass body.
+            let sum = 0;
+            for (let i = 1; i <= 6; i++) sum += freqData[i];
+            const avg = sum / (6 * 255); // 0..1
+            // Compress for punch — bass tends to dominate the high end of the range
+            return Math.min(1, Math.pow(avg, 0.85) * 1.15);
         };
 
         // --- Render loop ---
@@ -714,15 +726,24 @@ export default function BioCoreSphere() {
             uniforms.uMouse.value.set(m.x, m.y);
             uniforms.uProximity.value = m.proximity;
 
-            // --- Heartbeat ease + scale ---
+            // --- Audio-reactive beat ---
+            // 1) Ease the master intensity to 0 when paused (so the effect fades out).
             const target = playingRef.current ? 1 : 0;
             beatIntensity += (target - beatIntensity) * 0.04; // ~1s ease
-            const beat = heartbeat(t) * beatIntensity;
-            const beatScale = 1 + beat * 0.028; // ±2.8% — subtle
-            sphere.scale.setScalar(beatScale);
-            core.scale.setScalar(1 + beat * 0.045); // inner core pulses a bit more
-            tendrilsGroup.scale.setScalar(1 + beat * 0.018);
-            halo.scale.setScalar(1 + beat * 0.022);
+            // 2) Sample live bass energy and apply fast-attack / slow-decay envelope.
+            const sample = playingRef.current ? sampleBeat() : 0;
+            if (sample > beat) {
+                beat += (sample - beat) * 0.45; // snappy attack on kick
+            } else {
+                beat *= 0.90; // slow decay so we see the thump linger
+            }
+            const b = beat * beatIntensity; // 0..~1
+            // 3) Drive sphere/core/tendril scale + shared uBeat uniform.
+            sphere.scale.setScalar(1 + b * 0.06);    // ±6% on hard hits
+            core.scale.setScalar(1 + b * 0.085);     // inner core jumps more
+            tendrilsGroup.scale.setScalar(1 + b * 0.035);
+            halo.scale.setScalar(1 + b * 0.045);
+            uniforms.uBeat.value = b;
 
             // Slow, heavy rotation
             sphere.rotation.y += dt * 0.09;

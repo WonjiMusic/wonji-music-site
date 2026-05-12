@@ -22,6 +22,7 @@ export default function MusicPlayer() {
         prev,
         volume,
         setVolume,
+        analyserRef: sharedAnalyserRef,
     } = usePlayer();
 
     const [levels, setLevels] = useState(() => new Array(BARS).fill(0));
@@ -51,6 +52,8 @@ export default function MusicPlayer() {
             audioCtxRef.current = ctx;
             analyserRef.current = analyser;
             sourceRef.current = src;
+            // Expose to other consumers (e.g. BioCoreSphere)
+            if (sharedAnalyserRef) sharedAnalyserRef.current = analyser;
         } catch (e) {
             console.warn("Audio analysis unavailable:", e);
         }
@@ -149,8 +152,9 @@ export default function MusicPlayer() {
             if (audioCtxRef.current) {
                 audioCtxRef.current.close().catch(() => {});
             }
+            if (sharedAnalyserRef) sharedAnalyserRef.current = null;
         };
-    }, []);
+    }, [sharedAnalyserRef]);
 
     const seekPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
     const volPercent = (muted ? 0 : volume) * 100;
