@@ -21,7 +21,7 @@ export const SECTIONS = {
         eyebrow: "01 — Catalog",
         title: ["Music"],
         subtitle:
-            "Original tracks, singles and works in progress. Streaming everywhere once they drop — start with the latest single.",
+            "Original tracks, singles and works in progress. Streaming everywhere once they drop, start with the latest single.",
         body: [
             { label: "Collapse Protocol - BOXHEAD: Immortal OST", meta: "PRODUCED · MIXED · 2025" },
             { label: "Forgotten Lands", meta: "RECORDED · COMPOSED · 2025" },
@@ -74,7 +74,7 @@ export const SERVICES = {
         eyebrow: "Service / 01",
         title: ["Guitar", "Recording"],
         subtitle:
-            "Reference-grade electric and acoustic guitar tracking — recorded in a controlled, low-noise environment with multi-mic capture and amp/IR options.",
+            "Clean, detailed guitar recordings with flexible tone sculpting and production-ready sound.",
         details: [
             { k: "FORMAT", v: "REMOTE STEMS · IN-STUDIO" },
             { k: "TURNAROUND", v: "5—14 DAYS" },
