@@ -49,7 +49,7 @@ export const SECTIONS = {
         subtitle:
             "A focused rig and reliable gear chosen for clarity, aggression, and dynamic range",
         body: [
-            { label: "Guitars", meta: "IBANEZ PRESTIGE RG1570 · PRS 277 SE BARITONE" },
+            { label: "Guitars", meta: "IBANEZ PRESTIGE RG1570 · PRS SE 277 BARITONE" },
             { label: "Amps", meta: "NEURAL DSP QUAD CORTEX · AXE FX ULTRA" },
             { label: "Interface", meta: "FOCUSRITE SCARLETT 18i20" },
             { label: "Monitors", meta: "GENELEC 8030CP" },
