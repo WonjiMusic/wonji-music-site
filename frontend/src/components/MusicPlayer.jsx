@@ -168,166 +168,162 @@ export default function MusicPlayer() {
             />
 
             <div
-                className="flex items-center gap-3 p-2 pr-3 backdrop-blur-md border-t border-[var(--line-strong)] sm:border music-player-card"
+                className="flex flex-col p-2 pr-2.5 backdrop-blur-md border-t border-[var(--line-strong)] sm:border music-player-card"
                 style={{ background: "rgba(8, 9, 13, 0.88)" }}
             >
-                <div
-                    data-testid="player-album-art"
-                    className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 relative overflow-hidden"
-                    style={{
-                        background:
-                            "radial-gradient(circle at 35% 35%, rgba(106,0,255,0.55), rgba(26,42,108,0.45) 45%, #060810 75%)",
-                        border: "1px solid rgba(208,208,208,0.15)",
-                    }}
-                >
+                <div className="flex items-center gap-3">
                     <div
-                        className="absolute inset-0"
+                        data-testid="player-album-art"
+                        className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 relative overflow-hidden"
                         style={{
-                            backgroundImage:
-                                "radial-gradient(circle at 60% 50%, rgba(255,255,255,0.18), transparent 40%), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 4px)",
+                            background:
+                                "radial-gradient(circle at 35% 35%, rgba(106,0,255,0.55), rgba(26,42,108,0.45) 45%, #060810 75%)",
+                            border: "1px solid rgba(208,208,208,0.15)",
                         }}
+                    >
+                        <div
+                            className="absolute inset-0"
+                            style={{
+                                backgroundImage:
+                                    "radial-gradient(circle at 60% 50%, rgba(255,255,255,0.18), transparent 40%), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 4px)",
+                            }}
+                        />
+                        <div className="absolute inset-2 rounded-full border border-white/10" />
+                        <div className="absolute inset-3 rounded-full border border-white/5" />
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                        <div className="font-mono text-[9px] tracking-label text-[var(--text-dim)] uppercase hidden sm:block">
+                            Now Playing
+                        </div>
+
+                        <div
+                            data-testid="player-track-name"
+                            className="text-[12px] text-white tracking-wider-2 uppercase truncate font-medium"
+                        >
+                            {currentTrack.title}
+                        </div>
+
+                        <div
+                            data-testid="player-artist-name"
+                            className="font-mono text-[9px] tracking-label text-[var(--text-dim)] uppercase truncate"
+                        >
+                            Wonji
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                        <button
+                            data-testid="player-prev-button"
+                            onClick={prev}
+                            aria-label="Previous track"
+                            className="player-ctrl-btn"
+                        >
+                            <SkipBack size={11} strokeWidth={1.5} fill="currentColor" />
+                        </button>
+
+                        <button
+                            data-testid="player-play-button"
+                            onClick={togglePlay}
+                            aria-label={playing ? "Pause" : "Play"}
+                            className="player-play-btn"
+                        >
+                            {playing ? (
+                                <Pause size={12} strokeWidth={1.5} fill="currentColor" />
+                            ) : (
+                                <Play size={12} strokeWidth={1.5} fill="currentColor" />
+                            )}
+                        </button>
+
+                        <button
+                            data-testid="player-next-button"
+                            onClick={next}
+                            aria-label="Next track"
+                            className="player-ctrl-btn"
+                        >
+                            <SkipForward size={11} strokeWidth={1.5} fill="currentColor" />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Compact scrubber + volume — INSIDE the card */}
+                <div className="player-meta-row hidden sm:flex items-center gap-2">
+                    <span
+                        className="player-time font-mono"
+                        data-testid="player-time-current"
+                    >
+                        {fmt(currentTime)}
+                    </span>
+                    <input
+                        type="range"
+                        min="0"
+                        max={duration || 0}
+                        step="0.1"
+                        value={Math.min(currentTime, duration || 0)}
+                        onMouseDown={() => { seekingRef.current = true; }}
+                        onTouchStart={() => { seekingRef.current = true; }}
+                        onChange={(e) => {
+                            const t = parseFloat(e.target.value);
+                            setCurrentTime(t);
+                        }}
+                        onMouseUp={(e) => {
+                            const t = parseFloat(e.target.value);
+                            if (audioRef.current) audioRef.current.currentTime = t;
+                            seekingRef.current = false;
+                        }}
+                        onTouchEnd={(e) => {
+                            const t = parseFloat(e.target.value);
+                            if (audioRef.current) audioRef.current.currentTime = t;
+                            seekingRef.current = false;
+                        }}
+                        aria-label="Seek"
+                        data-testid="player-seek-slider"
+                        className="player-seek-slider flex-1"
+                        style={{ "--seek": `${seekPercent}%` }}
+                        disabled={!duration}
                     />
-                    <div className="absolute inset-2 rounded-full border border-white/10" />
-                    <div className="absolute inset-3 rounded-full border border-white/5" />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                    <div className="font-mono text-[9px] tracking-label text-[var(--text-dim)] uppercase hidden sm:block">
-                        Now Playing
-                    </div>
-
-                    <div
-                        data-testid="player-track-name"
-                        className="text-[12px] text-white tracking-wider-2 uppercase truncate font-medium"
+                    <span
+                        className="player-time font-mono"
+                        data-testid="player-time-duration"
                     >
-                        {currentTrack.title}
-                    </div>
+                        {fmt(duration)}
+                    </span>
 
-                    <div
-                        data-testid="player-artist-name"
-                        className="font-mono text-[9px] tracking-label text-[var(--text-dim)] uppercase truncate"
-                    >
-                        Wonji
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                    <button
-                        data-testid="player-prev-button"
-                        onClick={prev}
-                        aria-label="Previous track"
-                        className="player-ctrl-btn"
-                    >
-                        <SkipBack size={11} strokeWidth={1.5} fill="currentColor" />
-                    </button>
+                    <span className="player-meta-divider" aria-hidden="true" />
 
                     <button
-                        data-testid="player-play-button"
-                        onClick={togglePlay}
-                        aria-label={playing ? "Pause" : "Play"}
-                        className="player-play-btn"
+                        type="button"
+                        onClick={() => setMuted((m) => !m)}
+                        aria-label={muted ? "Unmute" : "Mute"}
+                        data-testid="player-mute-button"
+                        className="text-[var(--text-dim)] hover:text-white transition-colors flex-shrink-0"
                     >
-                        {playing ? (
-                            <Pause size={12} strokeWidth={1.5} fill="currentColor" />
+                        {muted || volume === 0 ? (
+                            <VolumeX size={10} strokeWidth={1.5} />
                         ) : (
-                            <Play size={12} strokeWidth={1.5} fill="currentColor" />
+                            <Volume2 size={10} strokeWidth={1.5} />
                         )}
                     </button>
-
-                    <button
-                        data-testid="player-next-button"
-                        onClick={next}
-                        aria-label="Next track"
-                        className="player-ctrl-btn"
-                    >
-                        <SkipForward size={11} strokeWidth={1.5} fill="currentColor" />
-                    </button>
+                    <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value={muted ? 0 : volume}
+                        onChange={(e) => {
+                            const v = parseFloat(e.target.value);
+                            setVolume(v);
+                            if (v > 0 && muted) setMuted(false);
+                        }}
+                        aria-label="Volume"
+                        data-testid="player-volume-slider"
+                        className="player-volume-slider player-volume-slider--mini"
+                        style={{ "--vol": `${volPercent}%` }}
+                    />
                 </div>
             </div>
 
-            {/* Scrubber + time */}
-            <div
-                className="player-scrubber-row hidden sm:flex items-center gap-2 px-1"
-                data-testid="player-scrubber"
-            >
-                <span
-                    className="player-time font-mono"
-                    data-testid="player-time-current"
-                >
-                    {fmt(currentTime)}
-                </span>
-                <input
-                    type="range"
-                    min="0"
-                    max={duration || 0}
-                    step="0.1"
-                    value={Math.min(currentTime, duration || 0)}
-                    onMouseDown={() => { seekingRef.current = true; }}
-                    onTouchStart={() => { seekingRef.current = true; }}
-                    onChange={(e) => {
-                        const t = parseFloat(e.target.value);
-                        setCurrentTime(t);
-                    }}
-                    onMouseUp={(e) => {
-                        const t = parseFloat(e.target.value);
-                        if (audioRef.current) audioRef.current.currentTime = t;
-                        seekingRef.current = false;
-                    }}
-                    onTouchEnd={(e) => {
-                        const t = parseFloat(e.target.value);
-                        if (audioRef.current) audioRef.current.currentTime = t;
-                        seekingRef.current = false;
-                    }}
-                    aria-label="Seek"
-                    data-testid="player-seek-slider"
-                    className="player-seek-slider flex-1"
-                    style={{ "--seek": `${seekPercent}%` }}
-                    disabled={!duration}
-                />
-                <span
-                    className="player-time font-mono"
-                    data-testid="player-time-duration"
-                >
-                    {fmt(duration)}
-                </span>
-            </div>
-
-            {/* Volume bar */}
-            <div
-                className="hidden sm:flex items-center gap-2 px-1"
-                data-testid="player-volume"
-            >
-                <button
-                    type="button"
-                    onClick={() => setMuted((m) => !m)}
-                    aria-label={muted ? "Unmute" : "Mute"}
-                    data-testid="player-mute-button"
-                    className="text-[var(--text-dim)] hover:text-white transition-colors"
-                >
-                    {muted || volume === 0 ? (
-                        <VolumeX size={11} strokeWidth={1.5} />
-                    ) : (
-                        <Volume2 size={11} strokeWidth={1.5} />
-                    )}
-                </button>
-                <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value={muted ? 0 : volume}
-                    onChange={(e) => {
-                        const v = parseFloat(e.target.value);
-                        setVolume(v);
-                        if (v > 0 && muted) setMuted(false);
-                    }}
-                    aria-label="Volume"
-                    data-testid="player-volume-slider"
-                    className="player-volume-slider flex-1"
-                    style={{ "--vol": `${volPercent}%` }}
-                />
-            </div>
-
+            {/* Waveform — outside card, unchanged */}
             <div
                 data-testid="player-waveform"
                 className="hidden sm:flex items-center justify-between h-6 px-1"

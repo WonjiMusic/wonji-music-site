@@ -1290,6 +1290,54 @@ a, button {
     transition: width 200ms linear;
 }
 
+/* In-card compact meta row: scrubber + volume on one slim line */
+.player-meta-row {
+    margin-top: 8px;
+    padding: 0 2px;
+    height: 16px;
+}
+.player-meta-row .player-time {
+    min-width: 26px;
+    font-size: 8.5px;
+    letter-spacing: 0.14em;
+}
+.player-meta-row .player-seek-slider {
+    height: 2px;
+    flex: 1 1 auto;
+}
+.player-meta-row .player-seek-slider::-webkit-slider-thumb {
+    width: 8px;
+    height: 8px;
+    box-shadow: 0 0 5px rgba(106, 0, 255, 0.55);
+}
+.player-meta-row .player-seek-slider::-moz-range-thumb {
+    width: 8px;
+    height: 8px;
+    box-shadow: 0 0 5px rgba(106, 0, 255, 0.55);
+}
+.player-meta-divider {
+    width: 1px;
+    height: 10px;
+    background: rgba(208, 208, 208, 0.18);
+    margin: 0 4px;
+    flex-shrink: 0;
+}
+.player-volume-slider--mini {
+    height: 2px;
+    width: 56px;
+    flex: 0 0 56px;
+}
+.player-volume-slider--mini::-webkit-slider-thumb {
+    width: 7px;
+    height: 7px;
+    box-shadow: 0 0 4px rgba(106, 0, 255, 0.55);
+}
+.player-volume-slider--mini::-moz-range-thumb {
+    width: 7px;
+    height: 7px;
+    box-shadow: 0 0 4px rgba(106, 0, 255, 0.55);
+}
+
 /* ============================================================
    Mobile nav pill (visible only <md)
    ============================================================ */
