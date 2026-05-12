@@ -34,7 +34,7 @@ export const SECTIONS = {
         eyebrow: "02 — Profile",
         title: ["About"],
         subtitle:
-            "Wonji is a musician, guitarist, producer, and composer with a lifelong background in music and years of live performance experience. Inspired by metal music, cinematic scores, and epic orchestral soundtracks for games, he creates music that blends intensity, emotion, and imagination. With a strong passion for storytelling through sound, his work focuses on creating immersive musical worlds that leave a lasting impact. For Wonji, music is more than entertainment — it’s a way to express something meaningful and leave a legacy that lives on beyond a lifetime.",
+            "Wonji is a musician, guitarist, producer, and composer with a lifelong background in music and years of live performance experience. Inspired by metal music, cinematic scores, and epic orchestral soundtracks for games, he creates music that blends intensity, emotion, and imagination. With a strong passion for storytelling through sound, his work focuses on creating immersive musical worlds that leave a lasting impact. For Wonji, music is more than entertainment, it’s a way to express something meaningful and leave a legacy that lives on beyond a lifetime.",
         body: [
             { label: "Discipline", meta: "MODERN METAL · CINEMATIC · POST-GENRE" },
             { label: "Background", meta: "12+ YEARS · CONSERVATORY TRAINED" },
