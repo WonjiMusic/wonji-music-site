@@ -43,10 +43,10 @@ export default function Hero() {
             {/* Vignette over canvas */}
             <div className="absolute inset-0 z-10 pointer-events-none hero-vignette" />
 
-            {/* Top-right: AVAILABLE FOR PROJECTS */}
+            {/* Top-right: AVAILABLE FOR PROJECTS — hidden on very small screens */}
             <div
                 data-testid="hero-availability"
-                className="absolute top-7 right-10 z-20 flex items-center gap-2 anim-fade-in delay-1"
+                className="absolute top-7 right-4 md:right-10 z-20 hidden sm:flex items-center gap-2 anim-fade-in delay-1"
             >
                 <span
                     className="pulse-dot"
@@ -60,7 +60,7 @@ export default function Hero() {
             {/* LEFT: headline block */}
             <div
                 data-testid="hero-left"
-                className="absolute left-28 md:left-36 top-[18%] z-20 max-w-[640px] pr-6"
+                className="absolute left-5 sm:left-12 md:left-28 lg:left-36 top-[18%] sm:top-[18%] z-20 max-w-[640px] pr-5 sm:pr-6"
             >
                 <div
                     data-testid="hero-artist-name"
@@ -86,7 +86,7 @@ export default function Hero() {
                     data-testid="hero-headline"
                     className="hero-headline font-display uppercase headline-stone"
                     style={{
-                        fontSize: "clamp(3.4rem, 7.6vw, 8.2rem)",
+                        fontSize: "clamp(2.4rem, 8vw, 8.2rem)",
                         lineHeight: "0.92",
                         letterSpacing: "0.005em",
                         fontWeight: 400,
@@ -110,6 +110,28 @@ export default function Hero() {
                 >
                     High-end guitar work, mixing and orchestral composition.
                 </p>
+
+                {/* Mobile services list — visible only on small screens (desktop has the slide-out panel) */}
+                <ul
+                    data-testid="hero-mobile-services"
+                    className="md:hidden mt-6 flex flex-col gap-1 anim-fade-up delay-5"
+                >
+                    <div className="font-mono text-[10px] tracking-label text-[var(--text-dim)] mb-1 uppercase">
+                        Services
+                    </div>
+                    {SERVICES.map((s) => (
+                        <li key={s.slug}>
+                            <Link
+                                to={`/services/${s.slug}`}
+                                data-testid={`mobile-service-${s.slug}`}
+                                className="mobile-service-row"
+                            >
+                                <span className="mobile-service-bar" aria-hidden="true" />
+                                <span className="mobile-service-text">{s.label}</span>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
             </div>
 
             {/* RIGHT: services trigger (thin strip on right edge) */}

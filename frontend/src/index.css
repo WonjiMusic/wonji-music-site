@@ -1223,3 +1223,216 @@ a, button {
 .music-track-row.is-active {
     border-bottom-color: rgba(106, 0, 255, 0.45);
 }
+
+
+/* ============================================================
+   Music player: scrubber (seek slider) + time
+   ============================================================ */
+.player-time {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: rgba(208, 208, 208, 0.55);
+    min-width: 30px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+.player-seek-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 3px;
+    background: linear-gradient(
+        to right,
+        rgba(208, 208, 208, 0.85) 0%,
+        rgba(106, 0, 255, 0.85) var(--seek, 0%),
+        rgba(208, 208, 208, 0.12) var(--seek, 0%),
+        rgba(208, 208, 208, 0.12) 100%
+    );
+    outline: none;
+    cursor: pointer;
+    border-radius: 2px;
+}
+.player-seek-slider:disabled { opacity: 0.4; cursor: not-allowed; }
+.player-seek-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    background: #ffffff;
+    border: 1px solid rgba(106, 0, 255, 0.75);
+    box-shadow: 0 0 8px rgba(106, 0, 255, 0.6);
+    cursor: pointer;
+    transition: transform 200ms ease;
+}
+.player-seek-slider::-webkit-slider-thumb:hover { transform: scale(1.25); }
+.player-seek-slider::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    background: #ffffff;
+    border: 1px solid rgba(106, 0, 255, 0.75);
+    box-shadow: 0 0 8px rgba(106, 0, 255, 0.6);
+    cursor: pointer;
+}
+
+/* Mobile: thin progress bar under the player card */
+.player-mobile-progress {
+    position: relative;
+    height: 2px;
+    background: rgba(208, 208, 208, 0.10);
+    overflow: hidden;
+}
+.player-mobile-progress span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: linear-gradient(90deg, rgba(208,208,208,0.6), rgba(106,0,255,0.9));
+    box-shadow: 0 0 6px rgba(106,0,255,0.6);
+    transition: width 200ms linear;
+}
+
+/* ============================================================
+   Mobile nav pill (visible only <md)
+   ============================================================ */
+.mobile-nav-pill {
+    padding: 0.45rem 0.6rem;
+    background: rgba(8, 9, 13, 0.78);
+    border: 1px solid var(--line-strong);
+    border-radius: 9999px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 28px -14px rgba(106, 0, 255, 0.45);
+    gap: 0.15rem;
+    max-width: calc(100vw - 5rem);
+    overflow: hidden;
+}
+.mobile-nav-link {
+    position: relative;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    color: rgba(208, 208, 208, 0.6);
+    padding: 0.35rem 0.55rem;
+    border-radius: 9999px;
+    transition: color 250ms ease, background 250ms ease, text-shadow 250ms ease;
+}
+.mobile-nav-link:hover { color: #ffffff; }
+.mobile-nav-link.active {
+    color: #ffffff;
+    background: rgba(106, 0, 255, 0.18);
+    text-shadow: 0 0 6px rgba(106, 0, 255, 0.5);
+}
+
+/* Mobile socials dock */
+.mobile-socials-dock {
+    background: rgba(8, 9, 13, 0.75);
+    border: 1px solid var(--line-strong);
+    border-radius: 9999px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* ============================================================
+   Hero: mobile inline services list
+   ============================================================ */
+.mobile-service-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.5rem 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.28em;
+    color: rgba(208, 208, 208, 0.65);
+    text-transform: uppercase;
+    transition: color 250ms ease, transform 250ms ease;
+}
+.mobile-service-row:hover,
+.mobile-service-row:active {
+    color: #ffffff;
+    transform: translateX(2px);
+}
+.mobile-service-bar {
+    display: inline-block;
+    width: 22px;
+    height: 1px;
+    background: rgba(106, 0, 255, 0.65);
+    transition: width 250ms ease, background 250ms ease;
+}
+.mobile-service-row:hover .mobile-service-bar {
+    width: 34px;
+    background: rgba(106, 0, 255, 1);
+    box-shadow: 0 0 6px rgba(106, 0, 255, 0.7);
+}
+
+/* ============================================================
+   Responsive: tighten section content for mobile
+   ============================================================ */
+@media (max-width: 639px) {
+    /* Section row labels shrink */
+    .section-row,
+    .music-track-btn {
+        grid-template-columns: 24px 1fr auto;
+        gap: 0.5rem;
+        padding: 0.9rem 0;
+    }
+    .music-track-btn {
+        grid-template-columns: 22px 20px 1fr auto;
+    }
+    .section-row-label,
+    .music-track-label {
+        font-size: 0.88rem;
+    }
+    .section-row-meta,
+    .music-track-meta {
+        font-size: 9px;
+        letter-spacing: 0.2em;
+    }
+
+    /* Service detail rows */
+    .service-detail-row {
+        grid-template-columns: 80px 1fr auto;
+        gap: 0.5rem;
+        padding: 0.7rem 0;
+    }
+    .service-detail-key,
+    .service-detail-val {
+        font-size: 9px;
+        letter-spacing: 0.2em;
+    }
+
+    /* Service step rows */
+    .service-step {
+        font-size: 0.9rem;
+    }
+
+    /* Buttons */
+    .btn-box { font-size: 11px; padding: 0.7rem 1.1rem; }
+
+    /* Contact inputs (full-width) */
+    .contact-input { font-size: 0.95rem; }
+
+    /* Make music-player mobile card slimmer */
+    .music-player-wrap {
+        gap: 0;
+    }
+    .music-player-card {
+        padding: 0.55rem 0.7rem;
+    }
+
+    /* Push page content above the bottom-fixed mobile player + socials dock */
+    [data-testid="section-content"],
+    [data-testid="service-content"],
+    [data-testid="contact-content"] {
+        padding-bottom: 11rem;
+    }
+}
+
+/* Make the BioCoreSphere on mobile a touch smaller / centered */
+@media (max-width: 639px) {
+    [data-testid="hero-section"] {
+        min-height: 100svh;
+    }
+    .hero-headline {
+        margin-top: 0.25rem;
+    }
+}

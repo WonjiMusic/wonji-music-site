@@ -35,7 +35,7 @@ function Shell() {
                 to="/"
                 data-testid="nav-logo"
                 aria-label="Home"
-                className="fixed top-3 left-0 z-40 w-20 md:w-24 flex justify-center select-none nav-logo-link"
+                className="fixed top-2 left-3 md:top-3 md:left-0 z-40 w-14 md:w-24 flex justify-center select-none nav-logo-link"
             >
                 <img
                     src="/logo.png"

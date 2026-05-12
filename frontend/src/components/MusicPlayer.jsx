@@ -4,6 +4,13 @@ import { usePlayer } from "../context/PlayerContext";
 
 const BARS = 60;
 
+const fmt = (s) => {
+    if (!isFinite(s) || s < 0) return "0:00";
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60).toString().padStart(2, "0");
+    return `${m}:${sec}`;
+};
+
 export default function MusicPlayer() {
     const {
         currentTrack,
@@ -19,12 +26,15 @@ export default function MusicPlayer() {
 
     const [levels, setLevels] = useState(() => new Array(BARS).fill(0));
     const [muted, setMuted] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
 
     const audioRef = useRef(null);
     const audioCtxRef = useRef(null);
     const analyserRef = useRef(null);
     const sourceRef = useRef(null);
     const rafRef = useRef(null);
+    const seekingRef = useRef(false);
 
     const initAudio = () => {
         if (audioCtxRef.current || !audioRef.current) return;
@@ -68,11 +78,12 @@ export default function MusicPlayer() {
     useEffect(() => {
         const audio = audioRef.current;
         if (!audio) return;
+        setCurrentTime(0);
+        setDuration(0);
         audio.load();
         if (playing) {
             audio.play().catch(() => {});
         }
-        // intentionally not depending on `playing` here to avoid double-load
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentIndex]);
 
@@ -82,6 +93,30 @@ export default function MusicPlayer() {
         if (!audio) return;
         audio.volume = muted ? 0 : volume;
     }, [volume, muted]);
+
+    // Audio time / duration listeners
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return undefined;
+
+        const onTime = () => {
+            if (!seekingRef.current) setCurrentTime(audio.currentTime);
+        };
+        const onMeta = () => setDuration(audio.duration || 0);
+        const onEnd = () => next();
+
+        audio.addEventListener("timeupdate", onTime);
+        audio.addEventListener("loadedmetadata", onMeta);
+        audio.addEventListener("durationchange", onMeta);
+        audio.addEventListener("ended", onEnd);
+
+        return () => {
+            audio.removeEventListener("timeupdate", onTime);
+            audio.removeEventListener("loadedmetadata", onMeta);
+            audio.removeEventListener("durationchange", onMeta);
+            audio.removeEventListener("ended", onEnd);
+        };
+    }, [next]);
 
     // Waveform analyser loop
     useEffect(() => {
@@ -108,15 +143,6 @@ export default function MusicPlayer() {
         return () => cancelAnimationFrame(rafRef.current);
     }, [playing]);
 
-    // Auto-advance on track end
-    useEffect(() => {
-        const audio = audioRef.current;
-        if (!audio) return undefined;
-        const onEnd = () => next();
-        audio.addEventListener("ended", onEnd);
-        return () => audio.removeEventListener("ended", onEnd);
-    }, [next]);
-
     useEffect(() => {
         return () => {
             cancelAnimationFrame(rafRef.current);
@@ -126,11 +152,13 @@ export default function MusicPlayer() {
         };
     }, []);
 
+    const seekPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+    const volPercent = (muted ? 0 : volume) * 100;
+
     return (
         <div
             data-testid="music-player"
-            className="fixed bottom-7 right-8 z-40 hidden sm:flex flex-col items-stretch gap-2"
-            style={{ width: "360px" }}
+            className="fixed bottom-10 right-0 left-0 sm:left-auto sm:bottom-7 sm:right-8 z-40 flex flex-col items-stretch gap-2 sm:w-[360px] music-player-wrap"
         >
             <audio
                 ref={audioRef}
@@ -140,12 +168,12 @@ export default function MusicPlayer() {
             />
 
             <div
-                className="flex items-center gap-3 p-2 pr-3 backdrop-blur-md border border-[var(--line-strong)]"
-                style={{ background: "rgba(8, 9, 13, 0.78)" }}
+                className="flex items-center gap-3 p-2 pr-3 backdrop-blur-md border-t border-[var(--line-strong)] sm:border music-player-card"
+                style={{ background: "rgba(8, 9, 13, 0.88)" }}
             >
                 <div
                     data-testid="player-album-art"
-                    className="w-12 h-12 flex-shrink-0 relative overflow-hidden"
+                    className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 relative overflow-hidden"
                     style={{
                         background:
                             "radial-gradient(circle at 35% 35%, rgba(106,0,255,0.55), rgba(26,42,108,0.45) 45%, #060810 75%)",
@@ -164,7 +192,7 @@ export default function MusicPlayer() {
                 </div>
 
                 <div className="min-w-0 flex-1">
-                    <div className="font-mono text-[9px] tracking-label text-[var(--text-dim)] uppercase">
+                    <div className="font-mono text-[9px] tracking-label text-[var(--text-dim)] uppercase hidden sm:block">
                         Now Playing
                     </div>
 
@@ -217,9 +245,56 @@ export default function MusicPlayer() {
                 </div>
             </div>
 
+            {/* Scrubber + time */}
+            <div
+                className="player-scrubber-row hidden sm:flex items-center gap-2 px-1"
+                data-testid="player-scrubber"
+            >
+                <span
+                    className="player-time font-mono"
+                    data-testid="player-time-current"
+                >
+                    {fmt(currentTime)}
+                </span>
+                <input
+                    type="range"
+                    min="0"
+                    max={duration || 0}
+                    step="0.1"
+                    value={Math.min(currentTime, duration || 0)}
+                    onMouseDown={() => { seekingRef.current = true; }}
+                    onTouchStart={() => { seekingRef.current = true; }}
+                    onChange={(e) => {
+                        const t = parseFloat(e.target.value);
+                        setCurrentTime(t);
+                    }}
+                    onMouseUp={(e) => {
+                        const t = parseFloat(e.target.value);
+                        if (audioRef.current) audioRef.current.currentTime = t;
+                        seekingRef.current = false;
+                    }}
+                    onTouchEnd={(e) => {
+                        const t = parseFloat(e.target.value);
+                        if (audioRef.current) audioRef.current.currentTime = t;
+                        seekingRef.current = false;
+                    }}
+                    aria-label="Seek"
+                    data-testid="player-seek-slider"
+                    className="player-seek-slider flex-1"
+                    style={{ "--seek": `${seekPercent}%` }}
+                    disabled={!duration}
+                />
+                <span
+                    className="player-time font-mono"
+                    data-testid="player-time-duration"
+                >
+                    {fmt(duration)}
+                </span>
+            </div>
+
             {/* Volume bar */}
             <div
-                className="flex items-center gap-2 px-1"
+                className="hidden sm:flex items-center gap-2 px-1"
                 data-testid="player-volume"
             >
                 <button
@@ -249,13 +324,13 @@ export default function MusicPlayer() {
                     aria-label="Volume"
                     data-testid="player-volume-slider"
                     className="player-volume-slider flex-1"
-                    style={{ "--vol": `${(muted ? 0 : volume) * 100}%` }}
+                    style={{ "--vol": `${volPercent}%` }}
                 />
             </div>
 
             <div
                 data-testid="player-waveform"
-                className="flex items-center justify-between h-6 px-1"
+                className="hidden sm:flex items-center justify-between h-6 px-1"
                 aria-hidden="true"
             >
                 {Array.from({ length: BARS }).map((_, i) => {
@@ -282,6 +357,14 @@ export default function MusicPlayer() {
                         />
                     );
                 })}
+            </div>
+
+            {/* Mobile-only thin progress strip beneath the bar */}
+            <div
+                className="sm:hidden player-mobile-progress"
+                aria-hidden="true"
+            >
+                <span style={{ width: `${seekPercent}%` }} />
             </div>
         </div>
     );

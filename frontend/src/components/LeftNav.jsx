@@ -20,62 +20,101 @@ const SoundCloudIcon = () => (
     </svg>
 );
 
-const Logo = () => (
-    <img
-        src="/logo.png"
-        alt="Logo"
-        width="80"
-        height="46"
-        className="logo-img"
-        draggable="false"
-    />
-);
-
 export default function LeftNav({ activeSection }) {
     return (
-        <nav
-            data-testid="left-nav"
-            className="fixed left-0 top-0 h-screen w-20 md:w-24 z-30 flex flex-col items-center justify-between py-7"
-        >
-            {/* Spacer where the logo used to be — the logo is now a global fixed element
-                vertically above this nav and horizontally aligned with the AVAILABLE FOR PROJECTS row.
-                The spacer reserves the same vertical area to keep the nav items balanced below. */}
-            <div aria-hidden="true" className="w-1 h-16" />
+        <>
+            {/* DESKTOP nav — vertical fixed left */}
+            <nav
+                data-testid="left-nav"
+                className="hidden md:flex fixed left-0 top-0 h-screen w-20 md:w-24 z-30 flex-col items-center justify-between py-7"
+            >
+                <div aria-hidden="true" className="w-1 h-16" />
 
-            {/* Nav links */}
-            <ul className="flex flex-col gap-0 items-center text-center">
-                {NAV.map((item, idx) => (
-                    <li key={item.id} className="flex flex-col items-center">
-                        <Link
-                            to={item.to}
-                            data-testid={`nav-link-${item.id}`}
-                            className={`nav-link-h ${activeSection === item.id ? "active" : ""}`}
-                        >
-                            <span className="nav-link-energy" aria-hidden="true" />
-                            <span className="nav-link-text">{item.label}</span>
-                        </Link>
-                        {idx < NAV.length - 1 && (
-                            <span className="nav-sep" aria-hidden="true">·</span>
-                        )}
-                    </li>
+                <ul className="flex flex-col gap-0 items-center text-center">
+                    {NAV.map((item, idx) => (
+                        <li key={item.id} className="flex flex-col items-center">
+                            <Link
+                                to={item.to}
+                                data-testid={`nav-link-${item.id}`}
+                                className={`nav-link-h ${activeSection === item.id ? "active" : ""}`}
+                            >
+                                <span className="nav-link-energy" aria-hidden="true" />
+                                <span className="nav-link-text">{item.label}</span>
+                            </Link>
+                            {idx < NAV.length - 1 && (
+                                <span className="nav-sep" aria-hidden="true">·</span>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+
+                <div className="flex flex-col gap-5 items-center text-[var(--text-dim)]">
+                    <a href="#" data-testid="social-spotify" aria-label="Spotify" className="social-ico">
+                        <SpotifyIcon />
+                    </a>
+                    <a
+                        href="https://www.instagram.com/wonji_music/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-testid="social-instagram"
+                        aria-label="Instagram"
+                        className="social-ico"
+                    >
+                        <Instagram size={14} strokeWidth={1.4} />
+                    </a>
+                    <a
+                        href="https://www.youtube.com/@WonjiMusic"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-testid="social-youtube"
+                        aria-label="YouTube"
+                        className="social-ico"
+                    >
+                        <Youtube size={16} strokeWidth={1.4} />
+                    </a>
+                    <a
+                        href="https://soundcloud.com/wonjimusic"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-testid="social-soundcloud"
+                        aria-label="SoundCloud"
+                        className="social-ico"
+                    >
+                        <SoundCloudIcon />
+                    </a>
+                </div>
+            </nav>
+
+            {/* MOBILE nav — horizontal pill near top */}
+            <nav
+                data-testid="mobile-nav"
+                className="md:hidden fixed top-3 left-1/2 -translate-x-1/2 z-30 flex items-center mobile-nav-pill"
+            >
+                {NAV.map((item) => (
+                    <Link
+                        key={item.id}
+                        to={item.to}
+                        data-testid={`mobile-nav-link-${item.id}`}
+                        className={`mobile-nav-link ${activeSection === item.id ? "active" : ""}`}
+                    >
+                        {item.label}
+                    </Link>
                 ))}
-            </ul>
+            </nav>
 
-            {/* Socials — Spotify, Instagram, YouTube, SoundCloud */}
-            <div className="flex flex-col gap-5 items-center text-[var(--text-dim)]">
-                <a
-                    href="#"
-                    data-testid="social-spotify"
-                    aria-label="Spotify"
-                    className="social-ico"
-                >
+            {/* MOBILE socials — small dock at bottom-left, above the player */}
+            <div
+                data-testid="mobile-socials"
+                className="md:hidden fixed bottom-[112px] left-3 z-30 flex items-center gap-3 px-3 py-2 mobile-socials-dock text-[var(--text-dim)]"
+            >
+                <a href="#" data-testid="mobile-social-spotify" aria-label="Spotify" className="social-ico">
                     <SpotifyIcon />
                 </a>
                 <a
                     href="https://www.instagram.com/wonji_music/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    data-testid="social-instagram"
+                    data-testid="mobile-social-instagram"
                     aria-label="Instagram"
                     className="social-ico"
                 >
@@ -85,7 +124,7 @@ export default function LeftNav({ activeSection }) {
                     href="https://www.youtube.com/@WonjiMusic"
                     target="_blank"
                     rel="noopener noreferrer"
-                    data-testid="social-youtube"
+                    data-testid="mobile-social-youtube"
                     aria-label="YouTube"
                     className="social-ico"
                 >
@@ -95,13 +134,13 @@ export default function LeftNav({ activeSection }) {
                     href="https://soundcloud.com/wonjimusic"
                     target="_blank"
                     rel="noopener noreferrer"
-                    data-testid="social-soundcloud"
+                    data-testid="mobile-social-soundcloud"
                     aria-label="SoundCloud"
                     className="social-ico"
                 >
                     <SoundCloudIcon />
                 </a>
             </div>
-        </nav>
+        </>
     );
 }

@@ -20,7 +20,7 @@ export default function AboutPage() {
             <div className="absolute inset-0 z-10 pointer-events-none hero-vignette" />
 
             {/* Top-right availability badge */}
-            <div className="absolute top-7 right-10 z-20 flex items-center gap-2 anim-fade-in delay-1">
+            <div className="absolute top-7 right-4 md:right-10 z-20 hidden sm:flex items-center gap-2 anim-fade-in delay-1">
                 <span className="pulse-dot" aria-hidden="true" />
                 <span className="font-mono text-[10px] tracking-label text-[var(--text-dim)] uppercase">
                     Available for Projects
@@ -30,7 +30,7 @@ export default function AboutPage() {
             <Link
                 to="/"
                 data-testid="home-button"
-                className="absolute top-7 left-32 md:left-40 z-30 home-link"
+                className="absolute top-16 left-4 md:top-7 md:left-40 z-30 home-link"
             >
                 <ArrowLeft size={12} strokeWidth={1.4} />
                 <span>HOME</span>
@@ -38,7 +38,7 @@ export default function AboutPage() {
 
             <div
                 data-testid="section-content"
-                className="relative z-20 px-28 md:px-36 pt-[14%] pb-28 max-w-[1500px]"
+                className="relative z-20 px-5 sm:px-12 md:px-28 lg:px-36 pt-[26%] sm:pt-[14%] pb-32 max-w-[1500px]"
             >
                 <div className="font-mono text-[10px] tracking-label text-[var(--text-dim)] mb-7 uppercase anim-slide-left delay-1">
                     {data.eyebrow}
