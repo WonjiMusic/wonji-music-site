@@ -119,7 +119,7 @@ export default function AboutPage() {
                         <div className="about-portrait__caption">
                             <div className="about-portrait__line" aria-hidden="true" />
                             <span className="font-mono text-[10px] tracking-label uppercase text-[var(--text-dim)]">
-                                Wonji · Studio—01
+                                Wonji · Orphic Soundworks Studio
                             </span>
                         </div>
                     </div>
