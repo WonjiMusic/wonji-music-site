@@ -12,28 +12,28 @@ export const PLAYLIST = [
         url: "/Boxhead (Immortal) OST.mp3",
     },
     {
-        title: "Arcane Sun — Single",
+        title: "Forgotten Lands",
         meta: "2025",
         url: "/Boxhead (Immortal) OST.mp3",
     },
     {
-        title: "Iron Cathedral — Single",
+        title: "A Glimpse of Epiphany",
         meta: "2025",
         url: "/Boxhead (Immortal) OST.mp3",
     },
     {
-        title: "Hollow Spire — Demo",
-        meta: "2024 · INSTRUMENTAL",
-        url: "/Boxhead (Immortal) OST.mp3",
-    },
-    {
-        title: "Filaments — Demo",
+        title: "Prelude to Glory",
         meta: "2024",
         url: "/Boxhead (Immortal) OST.mp3",
     },
     {
-        title: "Below The Tide — Sketch",
-        meta: "2023",
+        title: "The Grand Capital",
+        meta: "2022",
+        url: "/Boxhead (Immortal) OST.mp3",
+    },
+    {
+        title: "Dungeon Ambush",
+        meta: "2022",
         url: "/Boxhead (Immortal) OST.mp3",
     },
 ];
