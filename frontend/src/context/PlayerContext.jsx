@@ -7,7 +7,7 @@ import { createContext, useContext, useState, useCallback } from "react";
 
 export const PLAYLIST = [
     {
-        title: "Boxhead (Immortal) OST",
+        title: "Collapse Protocol - Boxhead (Immortal) OST",
         meta: "2025 · ORIGINAL SCORE",
         url: "/Boxhead (Immortal) OST.mp3",
     },
