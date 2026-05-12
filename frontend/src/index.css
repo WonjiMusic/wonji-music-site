@@ -394,6 +394,222 @@ a, button {
     box-shadow: 0 20px 60px -20px rgba(106, 0, 255, 0.25);
 }
 /* ========================================================================
+   Upcoming Single Popup
+   ======================================================================== */
+.single-popup {
+    position: fixed;
+    top: 6.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 45;
+    width: min(420px, calc(100vw - 4rem));
+    padding: 12px 38px 14px 14px;
+    background: rgba(8, 9, 13, 0.78);
+    border: 1px solid rgba(106, 0, 255, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+        0 0 0 1px rgba(106, 0, 255, 0.10),
+        0 20px 60px -20px rgba(106, 0, 255, 0.55),
+        inset 0 0 40px -16px rgba(106, 0, 255, 0.35);
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity, clip-path;
+}
+.single-popup--entering {
+    pointer-events: auto;
+    animation: pop-in 820ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.single-popup--visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+    animation: pop-float 5.6s ease-in-out infinite;
+}
+.single-popup--leaving {
+    pointer-events: none;
+    animation: pop-out 700ms cubic-bezier(0.7, 0, 0.84, 0) forwards;
+}
+
+@keyframes pop-in {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-32px) scale(0.92);
+        clip-path: inset(50% 0 50% 0);
+        filter: blur(8px);
+    }
+    35% {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+        filter: blur(0);
+    }
+    55% {
+        transform: translateX(-50%) translateY(0) scale(1.015);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+}
+@keyframes pop-float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(-3px); }
+}
+@keyframes pop-out {
+    0% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+        clip-path: inset(0 0 0 0);
+        filter: blur(0);
+    }
+    40% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-4px) scale(1) skewX(-2deg);
+        clip-path: inset(40% 0 0 0);
+    }
+    70% {
+        opacity: 0.7;
+        clip-path: inset(40% 0 40% 0);
+        filter: blur(4px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-22px) scale(0.96);
+        clip-path: inset(50% 0 50% 0);
+        filter: blur(12px);
+    }
+}
+
+.single-popup__inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    z-index: 2;
+}
+.single-popup__cover {
+    flex: 0 0 64px;
+    width: 64px;
+    height: 64px;
+    background:
+        radial-gradient(circle at 35% 35%, rgba(106,0,255,0.6), rgba(26,42,108,0.5) 45%, #060810 80%);
+    border: 1px solid rgba(208, 208, 208, 0.18);
+    overflow: hidden;
+    position: relative;
+}
+.single-popup__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.single-popup__text {
+    min-width: 0;
+    flex: 1;
+}
+.single-popup__label {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 9.5px;
+    letter-spacing: 0.32em;
+    color: rgba(208, 208, 208, 0.7);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.single-popup__dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: #6a00ff;
+    box-shadow: 0 0 7px rgba(106, 0, 255, 0.8);
+    animation: pulse-dot-core 2s ease-in-out infinite;
+}
+.single-popup__title {
+    font-size: 1.5rem;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-shadow: 0 0 16px rgba(106, 0, 255, 0.45);
+    margin-bottom: 4px;
+}
+.single-popup__release {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: rgba(232, 232, 236, 0.85);
+    text-transform: uppercase;
+}
+.single-popup__close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    color: rgba(208, 208, 208, 0.6);
+    background: transparent;
+    border: 1px solid rgba(208, 208, 208, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    transition: color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+}
+.single-popup__close:hover {
+    color: #ffffff;
+    border-color: rgba(106, 0, 255, 0.65);
+    box-shadow: 0 0 12px -2px rgba(106, 0, 255, 0.55);
+}
+/* Decorative scan-line that drifts during entry */
+.single-popup__scan {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.025) 0,
+        rgba(255, 255, 255, 0.025) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+/* Glitch chromatic edges that flicker on enter/exit */
+.single-popup__glitch {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border: 1px solid rgba(106, 0, 255, 0.4);
+    mix-blend-mode: screen;
+    z-index: 0;
+}
+.single-popup__glitch--a {
+    transform: translate(-3px, 0);
+    border-color: rgba(255, 60, 180, 0.25);
+    animation: glitch-a 5s ease-in-out infinite;
+}
+.single-popup__glitch--b {
+    transform: translate(3px, 0);
+    border-color: rgba(60, 180, 255, 0.20);
+    animation: glitch-b 5s ease-in-out infinite;
+}
+@keyframes glitch-a {
+    0%, 92%, 100% { transform: translate(-3px, 0); opacity: 0.7; }
+    93%           { transform: translate(-7px, 0); opacity: 1; }
+    95%           { transform: translate(-2px, 1px); }
+    97%           { transform: translate(-5px, 0); }
+}
+@keyframes glitch-b {
+    0%, 91%, 100% { transform: translate(3px, 0); opacity: 0.7; }
+    93%           { transform: translate(8px, 0); opacity: 1; }
+    95%           { transform: translate(2px, -1px); }
+    97%           { transform: translate(5px, 0); }
+}
+/* ========================================================================
    Template page styles — SpaceBackground, SectionPage, ServicePage
    ======================================================================== */
 .services-panel-fixed.is-open {

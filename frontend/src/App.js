@@ -7,6 +7,8 @@ import MusicPlayer from "./components/MusicPlayer";
 import SectionPage from "./pages/SectionPage";
 import ServicePage from "./pages/ServicePage";
 import ContactPage from "./pages/ContactPage";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function Shell() {
     const location = useLocation();
@@ -64,6 +66,8 @@ function App() {
         <BrowserRouter>
             <Shell />
         </BrowserRouter>
+        <Analytics />
+<SpeedInsights />
     );
 }
 

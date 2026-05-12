@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
 import BioCoreSphere from "./BioCoreSphere";
+import SinglePopup from "./SinglePopup";
+import { Link } from "react-router-dom";
 
 const SERVICES = [
     { slug: "guitar-recording", label: "GUITAR RECORDING" },
@@ -35,6 +36,9 @@ export default function Hero() {
             <div className="absolute inset-0 z-0">
                 <BioCoreSphere />
             </div>
+
+            {/* Upcoming single pop-up (auto-dismiss) */}
+            <SinglePopup />
 
             {/* Vignette over canvas */}
             <div className="absolute inset-0 z-10 pointer-events-none hero-vignette" />
