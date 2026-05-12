@@ -14,27 +14,27 @@ export const PLAYLIST = [
     {
         title: "Forgotten Lands",
         meta: "2025",
-        url: "/Boxhead (Immortal) OST.mp3",
+        url: "/vexso2-MM1.mp3",
     },
     {
         title: "A Glimpse of Epiphany",
         meta: "2025",
-        url: "/Boxhead (Immortal) OST.mp3",
+        url: "/A Glimpse of Epiphany.mp3",
     },
     {
         title: "Ancient Marsh Temple",
         meta: "2022",
-        url: "/Boxhead (Immortal) OST.mp3",
+        url: "/Ancient_Marsh_Temple.mp3",
     },
     {
         title: "The Grand Capital",
         meta: "2022",
-        url: "/Boxhead (Immortal) OST.mp3",
+        url: "/The_Grand_Capital.mp3",
     },
     {
         title: "Dungeon Ambush",
         meta: "2022",
-        url: "/Boxhead (Immortal) OST.mp3",
+        url: "/Dungeon_Ambush.mp3",
     },
 ];
 
