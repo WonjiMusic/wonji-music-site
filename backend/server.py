@@ -52,6 +52,8 @@ class ContactCreate(BaseModel):
     email: EmailStr
     subject: Optional[constr(strip_whitespace=True, max_length=200)] = None
     message: constr(strip_whitespace=True, min_length=10, max_length=4000)
+    # Honeypot — must remain empty. Bots auto-fill every field; real users never see it.
+    website: Optional[str] = ""
 
 
 class ContactResponse(BaseModel):
@@ -127,6 +129,22 @@ def _build_autoreply_html(name: str) -> str:
 
 @api_router.post("/contact", response_model=ContactResponse)
 async def submit_contact(payload: ContactCreate):
+    # Honeypot tripped — pretend everything's fine, store as spam, send nothing.
+    if payload.website and payload.website.strip():
+        record_id = str(uuid.uuid4())
+        await db.contact_submissions.insert_one({
+            "id": record_id,
+            "name": payload.name,
+            "email": payload.email,
+            "subject": payload.subject or "",
+            "message": payload.message,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "email_status": "rejected_honeypot",
+            "honeypot_value": payload.website[:200],
+        })
+        logger.info(f"Honeypot tripped on {record_id}; silently dropping.")
+        return ContactResponse(id=record_id, status="stored")
+
     # Persist every submission (also acts as backup if email delivery fails)
     record_id = str(uuid.uuid4())
     doc = {

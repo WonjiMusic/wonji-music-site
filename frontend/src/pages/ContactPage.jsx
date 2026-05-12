@@ -12,7 +12,7 @@ const INFO = [
 ];
 
 export default function ContactPage() {
-    const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+    const [form, setForm] = useState({ name: "", email: "", subject: "", message: "", website: "" });
     const [state, setState] = useState({ status: "idle", error: "" });
 
     const update = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -43,7 +43,7 @@ export default function ContactPage() {
                 throw new Error(data.detail || "Submission failed.");
             }
             setState({ status: "success", error: "" });
-            setForm({ name: "", email: "", subject: "", message: "" });
+            setForm({ name: "", email: "", subject: "", message: "", website: "" });
         } catch (err) {
             setState({ status: "error", error: err.message || "Something went wrong." });
         }
@@ -116,6 +116,21 @@ export default function ContactPage() {
                     >
                         <div className="font-mono text-[10px] tracking-label text-[var(--text-dim)] uppercase mb-5">
                             Send a Message
+                        </div>
+
+                        {/* Honeypot — hidden from humans, bots will fill it */}
+                        <div className="honeypot-field" aria-hidden="true">
+                            <label>
+                                Website
+                                <input
+                                    type="text"
+                                    name="website"
+                                    tabIndex={-1}
+                                    autoComplete="off"
+                                    value={form.website}
+                                    onChange={update("website")}
+                                />
+                            </label>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
