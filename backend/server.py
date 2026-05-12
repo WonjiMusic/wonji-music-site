@@ -102,6 +102,29 @@ def _build_contact_email_html(name: str, email: str, subject: str, message: str)
     """
 
 
+def _build_autoreply_html(name: str) -> str:
+    safe_name = (name or "there").strip() or "there"
+    return f"""
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#05060a;padding:32px 0;font-family:Arial,Helvetica,sans-serif;">
+      <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#0a0b12;border:1px solid #1a1b22;border-radius:4px;color:#d0d0d0;">
+          <tr><td style="padding:28px 32px 8px 32px;font-size:11px;letter-spacing:4px;color:#6a00ff;">MESSAGE RECEIVED</td></tr>
+          <tr><td style="padding:0 32px 18px 32px;font-size:22px;color:#ffffff;letter-spacing:1px;">Thanks, {safe_name}.</td></tr>
+          <tr><td style="padding:0 32px 16px 32px;font-size:14px;line-height:1.7;color:#d0d0d0;">
+            Your message landed in the studio. I read every inquiry personally and will get back to you within two business days &mdash; usually sooner.
+          </td></tr>
+          <tr><td style="padding:0 32px 16px 32px;font-size:14px;line-height:1.7;color:#d0d0d0;">
+            If your project is time-sensitive, just reply to this email and flag it. Otherwise, sit tight &mdash; the response will come straight from this address.
+          </td></tr>
+          <tr><td style="padding:8px 32px 28px 32px;font-size:12px;letter-spacing:3px;color:#9a9aa3;border-top:1px solid #1a1b22;margin-top:12px;">
+            <span style="color:#ffffff;">WONJI</span> &middot; GUITARIST &middot; PRODUCER &middot; COMPOSER
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+    """
+
+
 @api_router.post("/contact", response_model=ContactResponse)
 async def submit_contact(payload: ContactCreate):
     # Persist every submission (also acts as backup if email delivery fails)
@@ -144,6 +167,29 @@ async def submit_contact(payload: ContactCreate):
             {"id": record_id},
             {"$set": {"email_status": "sent", "email_id": email_id}},
         )
+
+        # Fire-and-forget auto-reply to the submitter. Failure here MUST NOT fail the request.
+        autoreply_params = {
+            "from": SENDER_EMAIL,
+            "to": [payload.email],
+            "reply_to": CONTACT_RECIPIENT_EMAIL,
+            "subject": "Thanks — message received | Wonji",
+            "html": _build_autoreply_html(payload.name),
+        }
+        try:
+            ar = await asyncio.to_thread(resend.Emails.send, autoreply_params)
+            ar_id = ar.get("id") if isinstance(ar, dict) else None
+            await db.contact_submissions.update_one(
+                {"id": record_id},
+                {"$set": {"autoreply_status": "sent", "autoreply_id": ar_id}},
+            )
+        except Exception as ar_err:
+            logger.warning(f"Auto-reply send failed (non-fatal): {ar_err}")
+            await db.contact_submissions.update_one(
+                {"id": record_id},
+                {"$set": {"autoreply_status": f"failed: {str(ar_err)[:200]}"}},
+            )
+
         return ContactResponse(id=record_id, status="sent", email_id=email_id)
     except Exception as e:
         logger.error(f"Resend send failed: {e}")
