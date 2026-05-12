@@ -22,8 +22,8 @@ export const PLAYLIST = [
         url: "/Boxhead (Immortal) OST.mp3",
     },
     {
-        title: "Prelude to Glory",
-        meta: "2024",
+        title: "Ancient Marsh Temple",
+        meta: "2022",
         url: "/Boxhead (Immortal) OST.mp3",
     },
     {
