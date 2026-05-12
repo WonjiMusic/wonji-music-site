@@ -47,7 +47,7 @@ export const SECTIONS = {
         eyebrow: "03 — Signal Chain",
         title: ["Gear"],
         subtitle:
-            "A focused, opinionated rig — built for tonal density, fast attack and headroom-on-demand.",
+            "A focused rig and reliable gear chosen for clarity, aggression, and dynamic range",
         body: [
             { label: "Guitars", meta: "IBANEZ PRESTIGE RG1570 · PRS 277 SE BARITONE" },
             { label: "Amps", meta: "NEURAL DSP QUAD CORTEX · AXE FX ULTRA" },
