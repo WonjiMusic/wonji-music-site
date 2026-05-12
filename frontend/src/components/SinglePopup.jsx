@@ -16,7 +16,7 @@ const POPUP = {
     title: "Panic Attack",
     label: "Upcoming Instrumental",
     release: "Out May 15",
-    image: "/single-cover.jpg", // user will drop this file in /app/frontend/public/
+    image: "/single-cover.png", // user will drop this file in /app/frontend/public/
 };
 
 export default function SinglePopup() {

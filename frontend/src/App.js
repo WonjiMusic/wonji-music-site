@@ -7,8 +7,7 @@ import MusicPlayer from "./components/MusicPlayer";
 import SectionPage from "./pages/SectionPage";
 import ServicePage from "./pages/ServicePage";
 import ContactPage from "./pages/ContactPage";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
+import AboutPage from "./pages/AboutPage";
 
 function Shell() {
     const location = useLocation();
@@ -51,6 +50,7 @@ function Shell() {
                 <Routes>
                     <Route path="/" element={<Hero />} />
                     <Route path="/work" element={<Navigate to="/music" replace />} />
+                    <Route path="/about" element={<AboutPage />} />
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="/:slug" element={<SectionPage />} />
                     <Route path="/services/:slug" element={<ServicePage />} />
@@ -66,8 +66,6 @@ function App() {
         <BrowserRouter>
             <Shell />
         </BrowserRouter>
-        <Analytics />
-<SpeedInsights />
     );
 }
 
