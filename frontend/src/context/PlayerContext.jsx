@@ -36,11 +36,6 @@ export const PLAYLIST = [
         meta: "2022",
         url: "/Dungeon_Ambush.mp3",
     },
-    {
-        title: "Dungeon Ambush1",
-        meta: "2022",
-        url: "/Dungeon_Ambush.mp3",
-    },
 ];
 
 const PlayerCtx = createContext(null);
