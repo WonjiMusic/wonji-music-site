@@ -165,12 +165,3 @@ export default function LeftNav({ activeSection }) {
         </>
     );
 }
-```
-
-Replace:
-
-```jsx
-https://open.spotify.com/artist/YOUR_ARTIST_ID
-```
-
-with your real Spotify artist URL.
