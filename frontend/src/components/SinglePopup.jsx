@@ -14,8 +14,8 @@ const STORAGE_KEY = "wonji_single_popup_seen";
 
 const POPUP = {
     title: "Panic Attack",
-    label: "Upcoming Instrumental",
-    release: "Out May 15",
+    label: "Instrumental",
+    release: "Streaming now on all platforms!",
     image: "/single-cover.png", // user will drop this file in /app/frontend/public/
 };
 
