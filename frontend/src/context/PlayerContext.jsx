@@ -10,36 +10,43 @@ export const PLAYLIST = [
         title: "Panic Attack",
         meta: "2026 · SINGLE",
         url: "/pa8.mp3",
+        artwork: "/artwork/panic-attack.jpg"
     },
     {
         title: "Collapse Protocol - Boxhead (Immortal) OST",
         meta: "2025 · ORIGINAL SCORE",
         url: "/Boxhead (Immortal) OST.mp3",
+        artwork: "/artwork/panic-attack.jpg"
     },
     {
         title: "Forgotten Lands",
         meta: "2025",
         url: "/vexso2-MM1.mp3",
+        artwork: "/artwork/panic-attack.jpg"
     },
     {
         title: "A Glimpse of Epiphany",
         meta: "2025",
         url: "/A Glimpse of Epiphany.mp3",
+        artwork: "/artwork/panic-attack.jpg"
     },
     {
         title: "Ancient Marsh Temple",
         meta: "2022",
         url: "/Ancient_Marsh_Temple.mp3",
+        artwork: "/artwork/panic-attack.jpg"
     },
     {
         title: "The Grand Capital",
         meta: "2022",
         url: "/The_Grand_Capital.mp3",
+        artwork: "/artwork/panic-attack.jpg"
     },
     {
         title: "Dungeon Ambush",
         meta: "2022",
         url: "/Dungeon_Ambush.mp3",
+        artwork: "/artwork/panic-attack.jpg"
     },
 ];
 
