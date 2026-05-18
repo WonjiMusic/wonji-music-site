@@ -177,24 +177,15 @@ export default function MusicPlayer() {
             >
                 <div className="flex items-center gap-3">
                     <div
-                        data-testid="player-album-art"
-                        className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 relative overflow-hidden"
-                        style={{
-                            background:
-                                "radial-gradient(circle at 35% 35%, rgba(106,0,255,0.55), rgba(26,42,108,0.45) 45%, #060810 75%)",
-                            border: "1px solid rgba(208,208,208,0.15)",
-                        }}
-                    >
-                        <div
-                            className="absolute inset-0"
-                            style={{
-                                backgroundImage:
-                                    "radial-gradient(circle at 60% 50%, rgba(255,255,255,0.18), transparent 40%), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 4px)",
-                            }}
-                        />
-                        <div className="absolute inset-2 rounded-full border border-white/10" />
-                        <div className="absolute inset-3 rounded-full border border-white/5" />
-                    </div>
+    data-testid="player-album-art"
+    className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 overflow-hidden border border-white/10"
+>
+    <img
+        src={currentTrack.artwork}
+        alt={currentTrack.title}
+        className="w-full h-full object-cover"
+    />
+</div>
 
                     <div className="min-w-0 flex-1">
                         <div className="font-mono text-[9px] tracking-label text-[var(--text-dim)] uppercase hidden sm:block">
