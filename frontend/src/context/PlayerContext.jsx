@@ -7,6 +7,11 @@ import { createContext, useContext, useState, useCallback, useRef } from "react"
 
 export const PLAYLIST = [
     {
+        title: "Panic Attack",
+        meta: "2026 · SINGLE",
+        url: "/Boxhead (Immortal) OST.mp3",
+    },
+    {
         title: "Collapse Protocol - Boxhead (Immortal) OST",
         meta: "2025 · ORIGINAL SCORE",
         url: "/Boxhead (Immortal) OST.mp3",
