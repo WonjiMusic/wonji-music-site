@@ -119,7 +119,7 @@ export default function LeftNav({ activeSection }) {
                 className="md:hidden fixed bottom-[112px] left-3 z-30 flex items-center gap-3 px-3 py-2 mobile-socials-dock text-[var(--text-dim)]"
             >
                 <a
-                    href="https://open.spotify.com/artist/YOUR_ARTIST_ID"
+                    href="https://open.spotify.com/artist/6zEwXnwMrFYTrSQRmFgvN1?si=G9hCBTjWSFe6kii7UkMvqw"
                     target="_blank"
                     rel="noopener noreferrer"
                     data-testid="mobile-social-spotify"
