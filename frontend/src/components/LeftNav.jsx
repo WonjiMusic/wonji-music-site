@@ -51,7 +51,7 @@ export default function LeftNav({ activeSection }) {
 
                 <div className="flex flex-col gap-5 items-center text-[var(--text-dim)]">
                     <a
-                        href="https://open.spotify.com/artist/YOUR_ARTIST_ID"
+                        href="https://open.spotify.com/artist/6zEwXnwMrFYTrSQRmFgvN1?si=G9hCBTjWSFe6kii7UkMvqw"
                         target="_blank"
                         rel="noopener noreferrer"
                         data-testid="social-spotify"
