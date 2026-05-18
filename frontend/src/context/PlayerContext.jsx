@@ -9,7 +9,7 @@ export const PLAYLIST = [
     {
         title: "Panic Attack",
         meta: "2026 · SINGLE",
-        url: "/Boxhead (Immortal) OST.mp3",
+        url: "/pa8.mp3",
     },
     {
         title: "Collapse Protocol - Boxhead (Immortal) OST",
